@@ -1,0 +1,65 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index/index",
+			"style": {
+				"navigationBarTitleText": "咨询中心"
+			}
+		},{
+			"path": "pages/index/newsDetail/index",
+			"style": {
+				"navigationBarTitleText": "新闻详情"
+			}
+		},{
+			"path": "pages/my/index/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		},{
+			"path": "pages/my/billDetails/index",
+			"style": {
+				"navigationBarTitleText": "账单明细"
+			}
+		},{
+			"path": "pages/my/discountDoupon/index",
+			"style": {
+				"navigationBarTitleText": "优惠券管理"
+			}
+		},{
+			"path": "pages/discover/index/index",
+			"style": {
+				"navigationBarTitleText": "发现"
+			}
+		}
+		
+	],
+	"tabBar": {
+	    "color": "#261900",
+	    "selectedColor": "#FB8D40",
+	    "borderStyle": "black",
+	    "backgroundColor": "#ffffff",
+	    "list": [{
+	        "pagePath": "pages/index/index/index",
+	        "iconPath": "",
+	        "selectedIconPath": "",
+	        "text": "首页"
+	    }, {
+	        "pagePath": "pages/discover/index/index",
+	        "iconPath": "",
+	        "selectedIconPath": "",
+	        "text": "发现"
+	    },{
+	        "pagePath": "pages/my/index/index",
+	        "iconPath": "",
+	        "selectedIconPath": "",
+	        "text": "我的"
+	    }]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8",
+		"navigationStyle": "custom"
+	}
+}
