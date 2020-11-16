@@ -8,15 +8,15 @@
 			</swiper>
 		</view>
 		<view class="ticketBox flex">
-			<view class="ticketList">
+			<view class="ticketList" @tap="goToPage('../getCoupon/index')">
 				<image src="/static/logo.png" class="ticketImg" mode="aspectFill"></image>
 				<view>免费券</view>
 			</view>
-			<view class="ticketList">
+			<view class="ticketList" @tap="goToPage()">
 				<image src="/static/logo.png" class="ticketImg" mode="aspectFill"></image>
 				<view>积赞劵</view>
 			</view>
-			<view class="ticketList">
+			<view class="ticketList" @tap="goToPage()">
 				<image src="/static/logo.png" class="ticketImg" mode="aspectFill"></image>
 				<view>更多券</view>
 			</view>
@@ -107,6 +107,11 @@
 			toNewsDetail(){
 				uni.navigateTo({
 					url: '../newsDetail/index?id=12'
+				})
+			},
+			goToPage(url){
+				uni.navigateTo({
+					url: url
 				})
 			}
 		}

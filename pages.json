@@ -6,6 +6,16 @@
 				"navigationBarTitleText": "咨询中心"
 			}
 		},{
+			"path": "pages/index/getCoupon/index",
+			"style": {
+				"navigationBarTitleText": "领券中心"
+			}
+		},{
+			"path": "pages/index/freeOfCharge/index",
+			"style": {
+				"navigationBarTitleText": "免费领券"
+			}
+		},{
 			"path": "pages/index/newsDetail/index",
 			"style": {
 				"navigationBarTitleText": "新闻详情"

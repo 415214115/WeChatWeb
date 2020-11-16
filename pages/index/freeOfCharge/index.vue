@@ -1,9 +1,6 @@
 <template>
-	<view class="discountDoupon">
-		<view class="navBox">
-			<view class="navList" @tap="selectNavFunc(nav.id)" :class="navListId==nav.id?'selectNav':''" v-for="nav in navList"
-			 :key="nav.id">{{nav.title}}</view>
-		</view>
+	<view class="freeOfCharge">
+		<view class="goToPage">我的优惠券</view>
 		<view class="discountDouponList">
 			<view class="listItem flex stateOne">
 				<view class="discountDouponMsg">
@@ -43,79 +40,33 @@
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				navList: [{
-					id: 0,
-					title: '未使用'
-				}, {
-					id: 1,
-					title: '已使用'
-				}, {
-					id: 2,
-					title: '已过期'
-				}],
-				navListId: 0
-			}
-		},
-		methods: {
-			selectNavFunc(i) {
-				this.navListId = i
+	export default{
+		data(){
+			return{
+				
 			}
 		}
 	}
 </script>
 
 <style scoped>
-	.discountDoupon {
-		min-height: 100vh;
-		padding-top: 120upx;
+	.freeOfCharge{
+		padding: 25upx;
 		background: #F5F5F5;
+		min-height: 100vh;
 	}
-
-	.navBox {
-		width: 100%;
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		background: #FFFFFF;
-		height: 120upx;
-		line-height: 120upx;
-	}
-
-	.navList {
-		display: inline-block;
-		margin-left: 50upx;
-		position: relative;
-		color: #929192;
-		font-size: 28upx;
-	}
-
-	.selectNav {
+	.goToPage{
 		color: #333333;
-		font-size: 30upx;
+		font-size: 28upx;
+		text-align: right;
+		font-weight: 500;
+		margin-bottom: 30upx;
 	}
-
-	.selectNav::before {
-		width: 50upx;
-		height: 10upx;
-		content: '';
-		position: absolute;
-		background: #FE800A;
-		border-radius: 64upx;
-		left: 0;
-		right: 0;
-		bottom: 20upx;
-		margin: auto;
-	}
-
 	/*优惠券样式开始*/
 	.discountDouponList {
-		padding: 30upx;
+		/* padding: 30upx; */
 	}
-
+	
 	.listItem {
 		padding: 20upx 15upx;
 		background: #FFFFFF;
@@ -124,19 +75,19 @@
 		align-items: center;
 		margin-bottom: 20upx;
 	}
-
+	
 	.fullReduction {
 		color: #666666;
 		font-size: 20upx;
 	}
-
+	
 	.discountDouponMsg {
 		text-align: center;
 		position: relative;
 		padding-right: 15upx;
 		width: 160upx;
 	}
-
+	
 	.discountDouponMsg::after {
 		width: 1px;
 		height: 100%;
@@ -147,22 +98,22 @@
 		right: 0;
 		bottom: 0;
 	}
-
+	
 	.money {
 		color: #000000;
 		font-size: 24upx;
 		font-size: 400;
 		margin-bottom: 20upx;
 	}
-
+	
 	.money text {
 		font-size: 48upx;
 	}
-
+	
 	.shopBox {
 		width: 290upx;
 	}
-
+	
 	.shopName {
 		color: #000000;
 		font-size: 30upx;
@@ -175,12 +126,12 @@
 		overflow-wrap: break-word;
 		white-space: wrap;
 	}
-
+	
 	.expireTime {
 		color: #666666;
 		font-size: 24upx;
 	}
-
+	
 	.funcBtn {
 		width: 136upx;
 		height: 48upx;
@@ -189,22 +140,22 @@
 		font-size: 24upx;
 		border-radius: 64upx;
 	}
-
+	
 	.stateOne .funcBtn {
 		background: linear-gradient(180deg, #FE4A32 0%, #FE7E48 100%);
 		box-shadow: 0px 2upx 20upx 0px rgba(251, 126, 50, 0.5);
 		color: #FFFFFF;
 	}
-
+	
 	.stateTwo {
 		background: #E8E8E8;
 	}
-
+	
 	.stateTwo .funcBtn {
 		background: #969696;
 		color: #FFFFFF;
 	}
-
+	
 	.stateTwo .money,
 	.stateTwo .shopName,
 	.stateTwo .fullReduction,
