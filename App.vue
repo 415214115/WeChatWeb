@@ -14,15 +14,19 @@
 
 <style>
 	@import url("/components/gaoyia-parse/parse.css");
+
 	/*每个页面公共css */
-	*{
+	* {
 		box-sizing: border-box;
+		font-family: baotucuheiti;
 	}
-	view{
+
+	view {
 		font-size: 28upx;
 		/* color: #333333; */
 	}
-	.flex{
+
+	.flex {
 		display: flex;
 		flex-wrap: nowrap;
 	}

@@ -1,0 +1,380 @@
+<template>
+	<scroll-view class="groupBooking" :scroll-y="true">
+		<view class="swiperBox">
+			<swiper class="swiper" :autoplay="false" previous-margin="35px" next-margin="35px" :circular="true" :current="swiper.current"
+			 @change="swiperChange">
+				<swiper-item class="swiperItem" v-for="(item, index) in 4">
+					<image src="/static/logo.png" class="swiperImage" :class="swiper.changeIndex == index?'changeIndex':''" mode="aspectFill"
+					 :lazy-load="true"></image>
+				</swiper-item>
+			</swiper>
+		</view>
+		<view class="shopMsg">
+			<view class="shopTitles">美食餐厅张江店美食餐厅张江店美食餐厅张江店美食餐厅张江店</view>
+			<view class="score">
+				<image src="/static/logo.png" class="scoreImage" mode="aspectFill"></image>
+				<image src="/static/logo.png" class="scoreImage" mode="aspectFill"></image>
+				<image src="/static/logo.png" class="scoreImage" mode="aspectFill"></image>
+				<image src="/static/logo.png" class="scoreImage" mode="aspectFill"></image>
+				<image src="/static/logo.png" class="scoreImage" mode="aspectFill"></image>
+				<text class="scoreText">4.9分</text>
+			</view>
+			<view class="addressBox flex">
+				<view class="addressLeft flex">
+					<image src="/static/logo.png" class="addressImage" mode="aspectFill"></image>
+					<view class="shopAddressBox">
+						<view class="shopAddress">天河区天河路00号正佳广场2层天河区天河路00号正佳广场2层</view>
+						<view class="shopAddressDistance">（距离3.2KM）</view>
+					</view>
+				</view>
+				<image src="/static/logo.png" class="telImage" mode="aspectFill"></image>
+			</view>
+		</view>
+		<view class="couponList">
+			<view class="boxTitles">店铺团购券</view>
+			<view class="couponBox flex">
+				<view class="couponMoney">
+					<view class="moneyNum">
+						￥<text class="moneyNumText">125</text>
+					</view>
+					<view class="meetMoney">满99元可用</view>
+				</view>
+				<view class="couponDetail">
+					<view class="detailNum">
+						<text class="detailNumText">125元</text>（第二张半价）
+					</view>
+					<view class="expireTime">有效期至2020.10.10</view>
+				</view>
+				<view class="funcBtn">3人团</view>
+			</view>
+			<view class="couponBox flex">
+				<view class="couponMoney">
+					<view class="moneyNum">
+						￥<text class="moneyNumText">125</text>
+					</view>
+					<view class="meetMoney">满99元可用</view>
+				</view>
+				<view class="couponDetail">
+					<view class="detailNum">
+						<text class="detailNumText">125元</text>（第二张半价）
+					</view>
+					<view class="expireTime">有效期至2020.10.10</view>
+				</view>
+				<view class="funcBtn">3人团</view>
+			</view>
+		</view>
+		<view class="commentList">
+			<view class="boxTitles">店铺评价</view>
+			<view class="shopCommentList flex" v-for="item in 3">
+				<image src="/static/logo.png" class="headerImage" mode="aspectFill"></image>
+				<view class="shopCommentContent">
+					<view class="topText flex">
+						<view class="userBox">
+							<view class="userName">客户名字</view>
+							<view class="userStart">
+								<image src="/static/logo.png" v-for="i in 5" class="userCommentImage" mode="aspectFill"></image>
+							</view>
+						</view>
+						<view class="userTime">2020-11-17</view>
+					</view>
+					<view class="shopCommentConText astrictText">
+						质量很好,品质绝对是杠杠的,不愧是来自景德镇的陶瓷,名不虚传!已经是爱不释手了
+						质量很好,品质绝对是杠杠的,不愧是来自景德镇的陶瓷,名不虚传!已经是爱不释手了
+					</view>
+					<view class="lookAll">阅读全部</view>
+					<view class="shopCommentImages">
+						<image src="/static/logo.png" v-for="i in 5" class="shopCommentImagesList" mode="aspectFill"></image>
+					</view>
+				</view>
+			</view>
+		</view>
+	</scroll-view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				swiper: {
+					current: 0,
+					changeIndex: 0
+				}
+			}
+		},
+		methods: {
+			swiperChange(e) {
+				this.swiper.changeIndex = e.target.current
+				console.log(e.target.current)
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	.swiperBox,
+	.swiper {
+		width: 100%;
+		height: 360upx;
+	}
+
+	.swiperItem {
+		padding: 20upx;
+	}
+
+	.swiperImage {
+		width: 560upx;
+		height: 260upx;
+		position: relative;
+		top: 30upx;
+		border-radius: 20upx;
+		transition: top .2s, height .2s;
+	}
+
+	.changeIndex {
+		height: 320upx;
+		top: 0;
+	}
+
+	.shopMsg,
+	.couponList {
+		padding: 30upx;
+		background: #FFFFFF;
+		border-bottom: 20upx solid #F0F0F0;
+	}
+
+	.shopTitles {
+		color: #2C3246;
+		font-size: 36upx;
+		font-size: 500;
+	}
+
+	.score {
+		margin-top: 20upx;
+		border-bottom: 1px solid #E0E0E0;
+		padding-bottom: 30upx;
+	}
+
+	.scoreImage {
+		width: 26upx;
+		height: 26upx;
+		margin-right: 10upx;
+	}
+
+	.scoreText {
+		color: #000000;
+		font-size: 28upx;
+		margin-left: 26upx;
+	}
+
+	.addressBox {
+		padding: 30upx 15upx;
+		justify-content: space-between;
+		flex-wrap: nowrap;
+		align-items: center;
+	}
+
+	.addressImage {
+		width: 30upx;
+		height: 30upx;
+		margin-right: 40upx;
+	}
+
+	.addressLeft {
+		justify-content: space-between;
+		flex-wrap: nowrap;
+		align-items: center;
+	}
+
+	.shopAddressBox {
+		width: 500upx;
+		padding-right: 50upx;
+		border-right: 1px solid #EEEEEE;
+	}
+
+	.shopAddress {
+		color: #000000;
+		font-size: 28upx;
+	}
+
+	.telImage {
+		width: 50upx;
+		height: 50upx;
+		border-radius: 100%;
+	}
+
+	.shopAddressDistance {
+		color: #8E8E8E;
+		font-size: 20upx;
+	}
+
+	.boxTitles {
+		color: #3A3A3A;
+		font-size: 36upx;
+		font-weight: 600;
+	}
+
+	.couponBox {
+		width: 100%;
+		height: 180upx;
+		border-radius: 20upx;
+		justify-content: space-between;
+		align-items: center;
+		box-shadow: 0 0 10upx 1px rgba(0, 0, 0, 0.2);
+		padding: 0 20upx;
+		margin-top: 30upx;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.couponBox::before,
+	.couponBox::after {
+		content: '';
+		position: absolute;
+		width: 20upx;
+		height: 20upx;
+		background: #FFFFFF;
+		box-shadow: 0 0 10upx 1px rgba(0, 0, 0, 0.2);
+		border-radius: 100%;
+		z-index: 1;
+		left: 180upx;
+	}
+
+	.couponBox::before {
+		top: -10upx;
+	}
+
+	.couponBox::after {
+		bottom: -10upx;
+	}
+
+	.couponMoney {
+		width: 170upx;
+		text-align: center;
+		border-right: 1px dotted #EEEEF0;
+	}
+
+	.moneyNum {
+		color: #FF6200;
+		font-size: 28upx;
+		font-weight: normal;
+	}
+
+	.moneyNumText {
+		font-size: 68upx;
+	}
+
+	.meetMoney {
+		font-size: 20upx;
+		color: #989AA3;
+	}
+
+	.detailNum {
+		font-size: 24upx;
+		color: #2C3246;
+		font-weight: 600;
+	}
+
+	.detailNumText {
+		font-size: 36upx;
+	}
+
+	.expireTime {
+		color: #697087;
+		font-size: 28upx;
+	}
+
+	.funcBtn {
+		width: 160upx;
+		height: 60upx;
+		background: linear-gradient(180deg, #FE4A32 0%, #FE7E48 100%);
+		box-shadow: 0px 2upx 20upx 0px rgba(251, 126, 50, 0.5);
+		border-radius: 64upx;
+		line-height: 60upx;
+		text-align: center;
+		color: #FFFFFF;
+	}
+
+	.shopCommentList {
+		padding: 30upx;
+		border-bottom: 1px solid #F4F4F4;
+		justify-content: space-between;
+		/* align-items: center; */
+	}
+
+	.commentList .boxTitles {
+		padding: 30upx 30upx 0 30upx;
+	}
+
+	.headerImage {
+		width: 60upx;
+		height: 60upx;
+		border-radius: 100%;
+		margin-right: 20upx;
+	}
+
+	.shopCommentContent {
+		width: 600upx;
+	}
+
+	.topText {
+		justify-content: space-between;
+	}
+
+	.userName {
+		color: #252525;
+		font-size: 32upx;
+		font-weight: 500;
+	}
+
+	.userCommentImage {
+		width: 18upx;
+		height: 18upx;
+		margin-right: 10upx;
+		margin-top: 10upx;
+	}
+
+	.userTime {
+		font-size: 24upx;
+		color: #5C5C5C;
+	}
+
+	.lookAll {
+		color: #2E6EFF;
+		font-size: 24upx;
+		margin-top: 15upx;
+		margin-bottom: 30upx;
+	}
+
+	.shopCommentConText {
+		color: #252525;
+		font-size: 30upx;
+		margin-top: 30upx;
+	}
+
+	.astrictText {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		overflow-wrap: break-word;
+		white-space: wrap;
+		text-align: justify;
+	}
+
+	.shopCommentImages {
+		width: 100%;
+		overflow-x: auto;
+		white-space: nowrap;
+	}
+
+	.shopCommentImagesList {
+		width: 180upx;
+		height: 130upx;
+		margin-left: 20upx;
+	}
+
+	.shopCommentImagesList:first-child {
+		margin-left: 0;
+	}
+</style>

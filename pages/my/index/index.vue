@@ -25,7 +25,7 @@
 				</view>
 				<image src="/static/image/rightjt.png" class="functionsImageJt" mode="aspectFill"></image>
 			</view>
-			<view class="flex listItem">
+			<view class="flex listItem" @tap="toAssignPage('../bank/myBank/index')">
 				<view class="listTitle">
 					<image src="/static/logo.png" class="functionsImage" mode="aspectFill"></image>银行卡管理
 				</view>

@@ -25,7 +25,7 @@
 					<view class="shopName">店铺名字店铺名字店铺名字店铺名字店铺名字店铺名字</view>
 					<view class="expireTime">2020-11-15 23:24:28到期</view>
 				</view>
-				<view class="funcBtn">已使用</view>
+				<view class="funcBtn" @tap="toAssignPage('../discuss/index')">我要评论</view>
 			</view>
 			<view class="listItem flex stateTwo">
 				<view class="discountDouponMsg">
@@ -62,6 +62,11 @@
 		methods: {
 			selectNavFunc(i) {
 				this.navListId = i
+			},
+			toAssignPage(url) {
+				uni.navigateTo({
+					url: url
+				})
 			}
 		}
 	}

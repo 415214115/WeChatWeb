@@ -8,7 +8,7 @@
 			</swiper>
 		</view>
 		<view class="ticketBox flex">
-			<view class="ticketList" @tap="goToPage('../getCoupon/index')">
+			<view class="ticketList" @tap="goToPage('../freeOfCharge/index')">
 				<image src="/static/logo.png" class="ticketImg" mode="aspectFill"></image>
 				<view>免费券</view>
 			</view>
@@ -96,7 +96,7 @@
 		data() {
 			return {
 				swiper: {
-					data: [1,2,3,4,5,6,78]
+					data: [1, 2, 3, 4, 5, 6, 78]
 				}
 			}
 		},
@@ -104,12 +104,12 @@
 
 		},
 		methods: {
-			toNewsDetail(){
+			toNewsDetail() {
 				uni.navigateTo({
 					url: '../newsDetail/index?id=12'
 				})
 			},
-			goToPage(url){
+			goToPage(url) {
 				uni.navigateTo({
 					url: url
 				})
@@ -122,27 +122,33 @@
 	.content {
 		background: #F1F1F1;
 	}
-	.swiperBox,.swiper,.swiper image{
+
+	.swiperBox,
+	.swiper,
+	.swiper image {
 		width: 100%;
 		height: 490upx;
 	}
-	.ticketBox{
+
+	.ticketBox {
 		padding: 0 24upx;
 		justify-content: space-between;
 		position: relative;
 		z-index: 5;
 		margin-top: -48upx;
 	}
-	.ticketList{
+
+	.ticketList {
 		width: 230upx;
 		height: 225upx;
 		background: #FFFFFF;
 		text-align: center;
 		font-size: 24upx;
 		font-weight: 600;
-		box-shadow: 0 0 20upx 1upx rgba(0,0,0,0.2);
+		box-shadow: 0 0 20upx 1upx rgba(0, 0, 0, 0.2);
 	}
-	.ticketImg{
+
+	.ticketImg {
 		position: relative;
 		width: 80upx;
 		height: 80upx;
@@ -150,25 +156,29 @@
 		margin-bottom: 20upx;
 		border-radius: 100%;
 	}
-	.newsBox{
+
+	.newsBox {
 		background: #FFFFFF;
 		margin-bottom: 20upx;
 		padding: 25upx;
 		margin-top: 30upx;
 		justify-content: space-between;
 	}
-	.newsLeftTitle{
+
+	.newsLeftTitle {
 		font-size: 50upx;
 		position: relative;
 		padding-right: 20upx;
 		margin-right: 20upx;
 	}
-	.newsIcon{
+
+	.newsIcon {
 		width: 75upx;
 		height: 72upx;
 		margin-top: 28upx;
 	}
-	.newsLeftTitle::after{
+
+	.newsLeftTitle::after {
 		position: absolute;
 		content: '';
 		width: 1px;
@@ -177,14 +187,17 @@
 		right: 0;
 		background: #F4F4F4;
 	}
-	.newsswiper{
+
+	.newsswiper {
 		height: 100upx;
 		margin-top: 20upx;
 	}
-	.newsListSwiper{
+
+	.newsListSwiper {
 		width: 560upx;
 	}
-	.newsswiperList{
+
+	.newsswiperList {
 		color: #2E2E2E;
 		font-size: 28upx;
 		position: relative;
@@ -193,7 +206,8 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
-	.newsswiperList::before{
+
+	.newsswiperList::before {
 		position: absolute;
 		content: '';
 		width: 9upx;
@@ -205,10 +219,12 @@
 		left: 0;
 		margin: auto;
 	}
-	.newsListBox{
+
+	.newsListBox {
 		background: #FFFFFF;
 	}
-	.newsListHeader{
+
+	.newsListHeader {
 		width: 100%;
 		padding: 30upx 0;
 		border-bottom: 1px solid #F4F4F4;
@@ -216,20 +232,24 @@
 		white-space: nowrap;
 		overflow-x: auto;
 	}
-	.newsListHeaderText{
+
+	.newsListHeaderText {
 		margin-left: 30upx;
 		position: relative;
 		font-size: 28upx;
 		color: #878A8F;
 		display: inline-block;
 	}
-	.newsListHeaderText:last-child{
+
+	.newsListHeaderText:last-child {
 		margin-right: 30upx;
 	}
-	.selectHeaderText{
+
+	.selectHeaderText {
 		color: #222222;
 	}
-	.selectHeaderText::before{
+
+	.selectHeaderText::before {
 		width: 42upx;
 		height: 5upx;
 		border-radius: 64upx;
@@ -241,49 +261,57 @@
 		bottom: -30upx;
 		margin: auto;
 	}
-	.newsListBoxContent{
+
+	.newsListBoxContent {
 		padding: 0 30upx;
 	}
-	.contBox{
+
+	.contBox {
 		justify-content: space-between;
 		border-bottom: 1px solid #F4F4F4;
 		padding: 30upx 0;
 	}
-	.headerTitle{
-		 display: -webkit-box;
-		    -webkit-line-clamp: 3; 
-		    -webkit-box-orient: vertical;
-		    text-overflow: ellipsis; 
-		    overflow: hidden;
-		    overflow-wrap: break-word; 
-		    white-space: wrap;
-			text-align: justify;
-			color: #303030;
-			font-size: 30upx;
+
+	.headerTitle {
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		overflow-wrap: break-word;
+		white-space: wrap;
+		text-align: justify;
+		color: #303030;
+		font-size: 30upx;
 	}
-	.textBox{
+
+	.textBox {
 		width: 420upx;
 		height: 60upx;
-		
+
 	}
-	.rightImages{
+
+	.rightImages {
 		width: 230upx;
 		height: 165upx;
 		border-radius: 6upx;
 		margin-left: 50upx;
 	}
-	.timeOrLook{
+
+	.timeOrLook {
 		color: #8F8F93;
 		font-size: 25upx;
 		margin-top: 20upx;
 	}
-	.timeOrLook text{
+
+	.timeOrLook text {
 		margin-left: 65upx;
 		padding-left: 45upx;
 		margin-left: 20upx;
 		position: relative;
 	}
-	.timeOrLook text::before{
+
+	.timeOrLook text::before {
 		content: '';
 		position: absolute;
 		width: 30upx;
@@ -296,15 +324,19 @@
 		bottom: 0;
 		margin: auto;
 	}
-	.across,.oneAcross{
+
+	.across,
+	.oneAcross {
 		justify-content: space-between;
 		margin-top: 30upx;
 	}
-	.across .rightImages{
+
+	.across .rightImages {
 		width: 32%;
 		margin-left: 0;
 	}
-	.oneAcross .rightImages{
+
+	.oneAcross .rightImages {
 		margin-left: 0;
 		width: 100%;
 		height: 400upx;

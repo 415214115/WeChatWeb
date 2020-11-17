@@ -6,11 +6,6 @@
 				"navigationBarTitleText": "咨询中心"
 			}
 		},{
-			"path": "pages/index/getCoupon/index",
-			"style": {
-				"navigationBarTitleText": "领券中心"
-			}
-		},{
 			"path": "pages/index/freeOfCharge/index",
 			"style": {
 				"navigationBarTitleText": "免费领券"
@@ -36,9 +31,29 @@
 				"navigationBarTitleText": "优惠券管理"
 			}
 		},{
+			"path": "pages/my/bank/myBank/index",
+			"style": {
+				"navigationBarTitleText": "银行卡"
+			}
+		},{
+			"path": "pages/my/bank/bankMsg/index",
+			"style": {
+				"navigationBarTitleText": "银行卡信息"
+			}
+		},{
+			"path": "pages/my/discuss/index",
+			"style": {
+				"navigationBarTitleText": "评论商家"
+			}
+		},{
 			"path": "pages/discover/index/index",
 			"style": {
 				"navigationBarTitleText": "发现"
+			}
+		},{
+			"path": "pages/discover/groupBooking/index",
+			"style": {
+				"navigationBarTitleText": "拼团领劵"
 			}
 		}
 		

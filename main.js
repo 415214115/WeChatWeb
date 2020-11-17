@@ -7,17 +7,17 @@ import request from './static/js/request.js'
 Vue.prototype.$request = request
 import jweixin from 'jweixin-module'
 Vue.prototype.$wx = jweixin
-// jweixin.config({
-// 	debug: true,
-// 	appId: 'wx27e5e3576b8ab430', // 必填，公众号的唯一标识
-// 	  timestamp: '1605363204574', // 必填，生成签名的时间戳
-// 	  nonceStr: '111', // 必填，生成签名的随机串
-// 	  signature: '68f13c1e9f615a6b1a89cab38e041d73',// 必填，签名
-// 	jsApiList: [
-// 		"getLocation", //获取地理位置
-// 		"chooseWXPay" //微信支付
-// 	]
-// });
+jweixin.config({
+	debug: true,
+	appId: 'wxc1e7cad6a53ecdbf', // 必填，公众号的唯一标识
+	timestamp: '1605363204574', // 必填，生成签名的时间戳
+	nonceStr: '111', // 必填，生成签名的随机串
+	signature: '10051876d71644a5ec37d001d6a1adcd', // 必填，签名
+	jsApiList: [
+		"getLocation", //获取地理位置
+		"chooseWXPay" //微信支付
+	]
+});
 App.mpType = 'app'
 
 const app = new Vue({
