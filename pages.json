@@ -55,6 +55,16 @@
 			"style": {
 				"navigationBarTitleText": "拼团领劵"
 			}
+		},{
+			"path": "pages/discover/birthday/index",
+			"style": {
+				"navigationBarTitleText": "生日领劵"
+			}
+		},{
+			"path": "pages/discover/share/index",
+			"style": {
+				"navigationBarTitleText": "分享积攒"
+			}
 		}
 		
 	],

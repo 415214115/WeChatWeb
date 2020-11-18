@@ -32,35 +32,44 @@
 		</view>
 		<view class="couponList">
 			<view class="boxTitles">店铺团购券</view>
-			<view class="couponBox flex">
-				<view class="couponMoney">
-					<view class="moneyNum">
-						￥<text class="moneyNumText">125</text>
+			<view class="" v-for="item in 2">
+				<view class="couponBox flex">
+					<view class="couponMoney">
+						<view class="moneyNum">
+							￥<text class="moneyNumText">125</text>
+						</view>
+						<view class="meetMoney">满99元可用</view>
 					</view>
-					<view class="meetMoney">满99元可用</view>
-				</view>
-				<view class="couponDetail">
-					<view class="detailNum">
-						<text class="detailNumText">125元</text>（第二张半价）
+					<view class="couponDetail">
+						<view class="detailNum">
+							<text class="detailNumText">125元</text>（第二张半价）
+						</view>
+						<view class="expireTime">有效期至2020.10.10</view>
 					</view>
-					<view class="expireTime">有效期至2020.10.10</view>
+					<view class="funcBtn">3人团</view>
 				</view>
-				<view class="funcBtn">3人团</view>
-			</view>
-			<view class="couponBox flex">
-				<view class="couponMoney">
-					<view class="moneyNum">
-						￥<text class="moneyNumText">125</text>
+				<view class="dumplingBox">
+					<view class="dumpling">
+						<text>我的团</text>已有1人参与拼团
 					</view>
-					<view class="meetMoney">满99元可用</view>
-				</view>
-				<view class="couponDetail">
-					<view class="detailNum">
-						<text class="detailNumText">125元</text>（第二张半价）
+					<view class="dumplingTip">
+						距离结束还剩下<text>21:59:13</text>
 					</view>
-					<view class="expireTime">有效期至2020.10.10</view>
+					<view class="userHeaderBox">
+						<image src="/static/logo.png" v-for="item in 5" mode="aspectFill" class="userHeaderBoxImage"></image>
+					</view>
 				</view>
-				<view class="funcBtn">3人团</view>
+				<view class="dumplingBox">
+					<view class="dumpling">
+						<text>拼团中</text>已有1人参与拼团
+					</view>
+					<view class="dumplingTip">
+						距离结束还剩下<text>21:59:13</text>
+					</view>
+					<view class="userHeaderBox">
+						<image src="/static/logo.png" v-for="item in 5" mode="aspectFill" class="userHeaderBoxImage"></image>
+					</view>
+				</view>
 			</view>
 		</view>
 		<view class="commentList">
@@ -85,6 +94,21 @@
 					<view class="shopCommentImages">
 						<image src="/static/logo.png" v-for="i in 5" class="shopCommentImagesList" mode="aspectFill"></image>
 					</view>
+				</view>
+			</view>
+		</view>
+		<view class="propBox" @touchmove.prevent>
+			<view class="propContent">
+				<view class="propContentTitle flex">
+					<view class="DPic">单份：4.00元</view>
+					<view class="handlerBox flex">
+						<image src="/static/logo.png" mode="aspectFill" class="handlerIMG"></image>
+						<view class="DPicNum">1</view>
+						<image src="/static/logo.png" mode="aspectFill" class="handlerIMG"></image>
+					</view>
+				</view>
+				<view class="payBtn">
+					立即支付<text>15.83元</text>
 				</view>
 			</view>
 		</view>
@@ -219,14 +243,17 @@
 		border-radius: 20upx;
 		justify-content: space-between;
 		align-items: center;
-		box-shadow: 0 0 10upx 1px rgba(0, 0, 0, 0.2);
+		/* box-shadow: 0 0 10upx 1px rgba(0, 0, 0, 0.2); */
 		padding: 0 20upx;
 		margin-top: 30upx;
 		position: relative;
 		overflow: hidden;
+		background-image: url(@/static/image/youhuiquan.png);
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
 	}
 
-	.couponBox::before,
+	/* .couponBox::before,
 	.couponBox::after {
 		content: '';
 		position: absolute;
@@ -245,7 +272,7 @@
 
 	.couponBox::after {
 		bottom: -10upx;
-	}
+	} */
 
 	.couponMoney {
 		width: 170upx;
@@ -292,6 +319,7 @@
 		line-height: 60upx;
 		text-align: center;
 		color: #FFFFFF;
+		margin-right: 10upx;
 	}
 
 	.shopCommentList {
@@ -376,5 +404,123 @@
 
 	.shopCommentImagesList:first-child {
 		margin-left: 0;
+	}
+
+	.dumplingBox {
+		padding: 30upx 0;
+		border-bottom: 1px solid #F2F3F5;
+	}
+
+	.dumpling {
+		color: #000000;
+		font-size: 36upx;
+	}
+
+	.dumpling text {
+		color: #EC6142;
+		margin-right: 20upx;
+	}
+
+	.dumplingTip {
+		color: #A5A5A5;
+		font-size: 28upx;
+		margin-top: 30upx;
+	}
+
+	.dumplingTip text {
+		color: #E7632B;
+		margin-left: 20upx;
+	}
+
+	.userHeaderBox {
+		margin-top: 30upx;
+	}
+
+	.userHeaderBoxImage {
+		width: 80upx;
+		height: 80upx;
+		border-radius: 100%;
+		margin-right: 40upx;
+		position: relative;
+	}
+
+	.userHeaderBoxImage:first-child::after {
+		content: '团长';
+		position: absolute;
+		width: 50upx;
+		height: 26upx;
+		/* padding: 10upx 20upx; */
+		text-align: center;
+		line-height: 26upx;
+		border-radius: 64upx;
+		background: #EC632C;
+		color: #FFFFFF;
+		top: 22px;
+		left: 8px;
+		font-size: 16upx;
+	}
+
+	.propBox {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background: rgba(0, 0, 0, 0.3);
+		z-index: 99;
+	}
+
+	.propContent {
+		width: 100%;
+		height: 300upx;
+		background: #FFFFFF;
+		right: 0;
+		left: 0;
+		bottom: 0;
+		position: absolute;
+		z-index: 100;
+		padding: 50upx 60upx;
+	}
+
+	.DPic {
+		color: #343434;
+		font-size: 50upx;
+		font-weight: normal;
+	}
+
+	.handlerIMG,
+	.DPicNum {
+		width: 50upx;
+		height: 50upx;
+	}
+
+	.propContentTitle,
+	.handlerBox {
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.propContentTitle {
+		margin-bottom: 50upx;
+	}
+
+	.DPicNum {
+		text-align: center;
+		line-height: 50upx;
+	}
+
+	.payBtn {
+		text-align: center;
+		border-radius: 64upx;
+		color: #FFFFFF;
+		height: 90upx;
+		line-height: 90upx;
+
+		background: linear-gradient(124deg, #FF8A00 0%, #FFB415 100%);
+	}
+
+	.payBtn text {
+		font-size: 50upx;
+		font-weight: normal;
 	}
 </style>
