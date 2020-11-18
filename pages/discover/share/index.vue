@@ -21,7 +21,7 @@
 					<image src="/static/logo.png" mode="aspectFill" class="posterBgImg"></image>
 					<view class="imagesTexts">
 						今天的努力，<br />
-						为了让明天毫不费力！            
+						为了让明天毫不费力！
 					</view>
 					<view class="bottomBox">
 						<view class="bottomBoxCodeBox flex">
@@ -154,7 +154,7 @@
 		margin-top: 20upx;
 	}
 
-	.posterBox{
+	.posterBox {
 		width: 470upx;
 		height: 760upx;
 		margin-top: 60upx;
@@ -163,45 +163,53 @@
 		background: #F7F8FA;
 		box-shadow: 0px 0px 19px 0px rgba(0, 0, 0, 0.15);
 	}
-	.posterBgImg{
+
+	.posterBgImg {
 		width: 470upx;
 		height: 520upx;
 	}
-	.bottomBox{
+
+	.bottomBox {
 		width: 436upx;
 		height: 212upx;
 		margin: -8upx 17upx 25upx 17upx;
 		background: #FFFFFF;
 		padding: 10upx;
 	}
-	.bottomBoxCodeBox{
+
+	.bottomBoxCodeBox {
 		justify-content: space-between;
 		align-items: center;
 		padding-bottom: 20upx;
 		border-bottom: 2upx dotted #868686;
 	}
-	.CodeBoxTirle{
+
+	.CodeBoxTirle {
 		color: #2A2A2A;
 		font-size: 22upx;
 		font-weight: 500;
 		margin-bottom: 20upx;
 	}
-	.CodeBoxTirleForm{
+
+	.CodeBoxTirleForm {
 		color: #2A2A2A;
 		font-size: 18upx;
 		font-weight: normal;
 	}
-	.codeImg{
+
+	.codeImg {
 		width: 100upx;
 		height: 100upx;
 	}
-	.bottomBoxCodeBoxTip{
+
+	.bottomBoxCodeBoxTip {
 		color: #2A2A2A;
 		font-size: 20upx;
 		text-align: center;
 		line-height: 80upx;
 	}
-	.submitBtn{
+
+	.submitBtn {
 		width: 470upx;
 		margin-top: 30upx;
 		margin-left: 140upx;
@@ -213,7 +221,8 @@
 		background: linear-gradient(180deg, #FA463C 0%, #FA7B54 100%);
 		box-shadow: 0px 2px 20px 0px rgba(247, 123, 68, 0.5);
 	}
-	.imagesTexts{
+
+	.imagesTexts {
 		position: absolute;
 		z-index: 1;
 		top: 70upx;
@@ -223,57 +232,26 @@
 		font-size: 36upx;
 		font-weight: 600;
 	}
-	.imagesTexts::before,.imagesTexts::after{
+
+	.imagesTexts::before,
+	.imagesTexts::after {
 		position: absolute;
 		color: #4A4A4A;
 		font-size: 40upx;
 		font-weight: 600;
 	}
-	.imagesTexts::before{
+
+	.imagesTexts::before {
 		content: '“';
 		left: -30upx;
 		top: -30upx;
 	}
-	.imagesTexts::after{
+
+	.imagesTexts::after {
 		content: '”';
 		right: -30upx;
 		bottom: -30upx;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	.discountDouponList {
 		padding: 40upx 30upx;
 	}
