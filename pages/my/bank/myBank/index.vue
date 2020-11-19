@@ -41,11 +41,13 @@
 		width: 100%;
 		height: 300upx;
 		margin-bottom: 30upx;
-		background: linear-gradient(180deg, #FE4C32 0%, #FE7C48 100%);
 		border-radius: 15upx;
 		padding: 70upx 60upx;
 		color: #FFFFFF;
 		font-weight: 400;
+		background-image: url(@/static/image/my/yhk.png);
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
 	}
 
 	.cardName {

@@ -11,24 +11,24 @@
 		</view>
 		<view class="couponBoxList">
 			<view class="couponBoxListItem">
-				<image src="/static/logo.png" class="couponBoxListImg" mode="scaleToFill"></image>
+				<image src="/static/image/center/c1.png" class="couponBoxListImg" mode="scaleToFill"></image>
 				<view class="couponBoxListText">
 					<view class="couponBoxListTextTitle">每日免费</view>
 					<view class="couponBoxListTextDerail">TOP.100</view>
 				</view>
 			</view>
 			<view class="couponBoxListItem" @tap="goToPage('../share/index')">
-				<image src="/static/logo.png" class="couponBoxListImg" mode="scaleToFill"></image>
+				<image src="/static/image/center/c2.png" class="couponBoxListImg" mode="scaleToFill"></image>
 				<view class="couponBoxListText">
 					<view class="couponBoxListTextTitle">积赞领劵</view>
 					<view class="couponBoxListTextDerail">THE TEST</view>
 				</view>
 			</view>
 			<view class="couponBoxListItem" @tap="goToPage('../birthday/index')">
-				<image src="/static/logo.png" class="couponBoxListImg" mode="scaleToFill"></image>
+				<image src="/static/image/center/c3.png" class="couponBoxListImg" mode="scaleToFill"></image>
 				<view class="couponBoxListText">
 					<view class="couponBoxListTextTitle">生日快乐</view>
-					<view class="couponBoxListTextDerail">THE TEST</view>
+					<view class="couponBoxListTextDerail">THE BIRTHDAY</view>
 				</view>
 			</view>
 		</view>

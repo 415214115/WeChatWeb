@@ -1,6 +1,7 @@
 <template>
 	<view class="billDetails">
 		<view class="dateBox flex">
+			<image src="../../../static/image/my/rl.png" mode="aspectFill" class="rlimg"></image>
 			<picker mode="date" :value="pickerValue" :start="startDate" :end="endDate" @change="pickerDateChange">
 				<view class="uni-input">{{pickerValue}}</view>
 			</picker>
@@ -86,7 +87,23 @@
 		border-radius: 15upx;
 		margin-top: 50upx;
 		padding: 25upx;
+		position: relative;
 	}
+	.rlimg{
+		width: 34upx;
+		height: 30upx;
+	}
+	/* .dateBox::before{
+		position: absolute;
+		background-image: url(@/static/image/my/rl.png);
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+		width: 30upx;
+		height: 30upx;
+		top: 0;
+		left: 0;
+		z-index: 5;
+	} */
 	uni-picker{
 		width: 45%;
 		display: inline-block;

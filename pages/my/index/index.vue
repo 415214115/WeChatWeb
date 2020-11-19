@@ -11,23 +11,23 @@
 			</view>
 			<view class="functions flex">
 				<view class="leftBox">
-					<image src="/static/logo.png" class="functionsImage" mode="aspectFill"></image>立即提现
+					<image src="/static/image/my/c.png" class="functionsImage" mode="aspectFill"></image>立即提现
 				</view>
 				<view class="rightBox" @tap="toAssignPage('../billDetails/index')">
-					<image src="/static/logo.png" class="functionsImage" mode="aspectFill"></image>账单明细
+					<image src="/static/image/my/f.png" class="functionsImage" mode="aspectFill"></image>账单明细
 				</view>
 			</view>
 		</view>
 		<view class="functionList">
 			<view class="flex listItem" @tap="toAssignPage('../discountDoupon/index')">
 				<view class="listTitle">
-					<image src="/static/logo.png" class="functionsImage" mode="aspectFill"></image>优惠券管理
+					<image src="/static/image/my/q.png" class="functionsImage" mode="aspectFill"></image>优惠券管理
 				</view>
 				<image src="/static/image/rightjt.png" class="functionsImageJt" mode="aspectFill"></image>
 			</view>
 			<view class="flex listItem" @tap="toAssignPage('../bank/myBank/index')">
 				<view class="listTitle">
-					<image src="/static/logo.png" class="functionsImage" mode="aspectFill"></image>银行卡管理
+					<image src="/static/image/my/k.png" class="functionsImage" mode="aspectFill"></image>银行卡管理
 				</view>
 				<image src="/static/image/rightjt.png" class="functionsImageJt" mode="aspectFill"></image>
 			</view>

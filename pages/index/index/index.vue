@@ -9,15 +9,15 @@
 		</view>
 		<view class="ticketBox flex">
 			<view class="ticketList" @tap="goToPage('../freeOfCharge/index')">
-				<image src="/static/logo.png" class="ticketImg" mode="aspectFill"></image>
+				<image src="/static/image/page/1.png" class="ticketImg" mode="aspectFill"></image>
 				<view>免费券</view>
 			</view>
 			<view class="ticketList" @tap="goToPage()">
-				<image src="/static/logo.png" class="ticketImg" mode="aspectFill"></image>
+				<image src="/static/image/page/jiaguanzhu.png" class="ticketImg" mode="aspectFill"></image>
 				<view>积赞劵</view>
 			</view>
 			<view class="ticketList" @tap="goToPage()">
-				<image src="/static/logo.png" class="ticketImg" mode="aspectFill"></image>
+				<image src="/static/image/page/gengduo.png" class="ticketImg" mode="aspectFill"></image>
 				<view>更多券</view>
 			</view>
 		</view>
@@ -155,6 +155,8 @@
 		margin-top: 50upx;
 		margin-bottom: 20upx;
 		border-radius: 100%;
+		padding: 20upx;
+		background: linear-gradient(0deg, #FE7C48, #FE4C32);
 	}
 
 	.newsBox {

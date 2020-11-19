@@ -3,9 +3,10 @@
 		<view class="pageTopFunc">
 			<view class="stepBox">
 				<view class="stepNext flex">
-					<image src="/static/logo.png" mode="aspectFill" class="stepNextImg"></image>
-					<image src="/static/logo.png" mode="aspectFill" class="stepNextImg"></image>
-					<image src="/static/logo.png" mode="aspectFill" class="stepNextImg"></image>
+					<image src="/static/image/center/sfz.png" mode="aspectFill" class="stepNextImg stepImg"></image>
+					<image src="/static/image/center/shenhe.png" mode="aspectFill" class="stepNextImg"></image>
+					<!-- <image src="/static/image/center/shenhe1.png" mode="aspectFill" class="stepNextImg stepImg"></image> -->
+					<image src="/static/image/center/quan.png" mode="aspectFill" class="stepNextImg"></image>
 					<view class="stepNextProcess">
 						<view class="stepNextProcessView"></view>
 					</view>
@@ -18,9 +19,9 @@
 			</view>
 			<view class="uploadTip">
 				<view class="uploadTipTitle">请拍摄并上传身份证</view>
-				<image src="/static/logo.png" mode="aspectFill" class="uploadTipImg"></image>
+				<image src="/static/image/center/sz.png" mode="aspectFill" class="uploadTipImg"></image>
 				<view class="uploadTipText">身份证正面</view>
-				<image src="/static/logo.png" mode="aspectFill" class="uploadTipImg" style="margin-top: 50upx;"></image>
+				<image src="/static/image/center/sb.png" mode="aspectFill" class="uploadTipImg" style="margin-top: 50upx;"></image>
 				<view class="uploadTipText">身份证背面</view>
 			</view>
 			<view class="">
@@ -99,8 +100,19 @@
 		position: relative;
 		z-index: 9;
 		border-radius: 100%;
+		padding: 12upx;
+		border: 1upx solid #CCCCCC;
+		background: #FFFFFF;
 	}
-
+	
+	.stepImg{
+		background: #F95D19;
+		/* padding: 12upx; */
+		
+		/* border: 8upx solid rgba(249,93,25,0.5); */
+		border: 8upx solid #FCBDA2;
+	}
+	
 	.stepNextProcess {
 		position: absolute;
 		width: 472upx;

@@ -3,9 +3,10 @@
 		<view class="pageTopFunc">
 			<view class="stepBox">
 				<view class="stepNext flex">
-					<image src="/static/logo.png" mode="aspectFill" class="stepNextImg"></image>
-					<image src="/static/logo.png" mode="aspectFill" class="stepNextImg"></image>
-					<image src="/static/logo.png" mode="aspectFill" class="stepNextImg"></image>
+					<image src="/static/image/center/sfz.png" mode="aspectFill" class="stepNextImg stepImg"></image>
+					<image src="/static/image/center/shenhe.png" mode="aspectFill" class="stepNextImg"></image>
+					<!-- <image src="/static/image/center/shenhe1.png" mode="aspectFill" class="stepNextImg stepImg"></image> -->
+					<image src="/static/image/center/quan.png" mode="aspectFill" class="stepNextImg"></image>
 					<view class="stepNextProcess">
 						<view class="stepNextProcessView"></view>
 					</view>
@@ -17,23 +18,27 @@
 				</view>
 			</view>
 			<view class="uploadTip">
-				<view class="posterBox">
-					<image src="/static/logo.png" mode="aspectFill" class="posterBgImg"></image>
-					<view class="imagesTexts">
-						今天的努力，<br />
-						为了让明天毫不费力！
-					</view>
-					<view class="bottomBox">
-						<view class="bottomBoxCodeBox flex">
-							<view class="">
-								<view class="CodeBoxTirle">扫描二维码，跟我一起学习</view>
-								<view class="CodeBoxTirleForm">来自 [go平台]公众号</view>
-							</view>
-							<image src="/static/logo.png" mode="aspectFill" class="codeImg"></image>
+				<view class="posterBoxBox">
+					<view class="exchange">换一张</view>
+					<view class="posterBox">
+						<image src="/static/logo.png" mode="aspectFill" class="posterBgImg"></image>
+						<view class="imagesTexts">
+							今天的努力，<br />
+							为了让明天毫不费力！
 						</view>
-						<view class="bottomBoxCodeBoxTip">现在加入，还有新人大礼包哦</view>
+						<view class="bottomBox">
+							<view class="bottomBoxCodeBox flex">
+								<view class="">
+									<view class="CodeBoxTirle">扫描二维码，跟我一起学习</view>
+									<view class="CodeBoxTirleForm">来自 [go平台]公众号</view>
+								</view>
+								<image src="/static/logo.png" mode="aspectFill" class="codeImg"></image>
+							</view>
+							<view class="bottomBoxCodeBoxTip">现在加入，还有新人大礼包哦</view>
+						</view>
 					</view>
 				</view>
+
 				<view class="submitBtn">上传提交</view>
 			</view>
 			<view class="">
@@ -112,6 +117,17 @@
 		position: relative;
 		z-index: 9;
 		border-radius: 100%;
+		padding: 12upx;
+		border: 1upx solid #CCCCCC;
+		background: #FFFFFF;
+	}
+
+	.stepImg {
+		background: #F95D19;
+		/* padding: 12upx; */
+
+		/* border: 8upx solid rgba(249,93,25,0.5); */
+		border: 8upx solid #FCBDA2;
 	}
 
 	.stepNextProcess {
@@ -136,6 +152,21 @@
 		padding-bottom: 40upx;
 	}
 
+	.exchange {
+		width: 100upx;
+		height: 50upx;
+		line-height: 50upx;
+		text-align: center;
+		background: rgba(0, 0, 0, 0.3);
+		color: #FFFFFF;
+		border-radius: 64upx;
+		top: -40upx;
+		float: right;
+		right: 120upx;
+		position: absolute;
+		z-index: 999;
+	}
+
 	.uploadTipImg {
 		width: 390upx;
 		height: 240upx;
@@ -152,6 +183,10 @@
 		color: #666666;
 		font-size: 26upx;
 		margin-top: 20upx;
+	}
+
+	.posterBoxBox {
+		position: relative;
 	}
 
 	.posterBox {
@@ -252,6 +287,7 @@
 		right: -30upx;
 		bottom: -30upx;
 	}
+
 	.discountDouponList {
 		padding: 40upx 30upx;
 	}

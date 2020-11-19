@@ -12,22 +12,22 @@
 		<view class="shopMsg">
 			<view class="shopTitles">美食餐厅张江店美食餐厅张江店美食餐厅张江店美食餐厅张江店</view>
 			<view class="score">
-				<image src="/static/logo.png" class="scoreImage" mode="aspectFill"></image>
-				<image src="/static/logo.png" class="scoreImage" mode="aspectFill"></image>
-				<image src="/static/logo.png" class="scoreImage" mode="aspectFill"></image>
-				<image src="/static/logo.png" class="scoreImage" mode="aspectFill"></image>
-				<image src="/static/logo.png" class="scoreImage" mode="aspectFill"></image>
+				<image src="/static/image/x1.png" class="scoreImage" mode="aspectFill"></image>
+				<image src="/static/image/x1.png" class="scoreImage" mode="aspectFill"></image>
+				<image src="/static/image/x1.png" class="scoreImage" mode="aspectFill"></image>
+				<image src="/static/image/x2.png" class="scoreImage" mode="aspectFill"></image>
+				<image src="/static/image/x2.png" class="scoreImage" mode="aspectFill"></image>
 				<text class="scoreText">4.9分</text>
 			</view>
 			<view class="addressBox flex">
 				<view class="addressLeft flex">
-					<image src="/static/logo.png" class="addressImage" mode="aspectFill"></image>
+					<image src="/static/image/center/address.png" class="addressImage" mode="aspectFill"></image>
 					<view class="shopAddressBox">
 						<view class="shopAddress">天河区天河路00号正佳广场2层天河区天河路00号正佳广场2层</view>
 						<view class="shopAddressDistance">（距离3.2KM）</view>
 					</view>
 				</view>
-				<image src="/static/logo.png" class="telImage" mode="aspectFill"></image>
+				<image src="/static/image/center/tel.png" class="telImage" mode="aspectFill"></image>
 			</view>
 		</view>
 		<view class="couponList">
@@ -56,7 +56,7 @@
 						距离结束还剩下<text>21:59:13</text>
 					</view>
 					<view class="userHeaderBox">
-						<image src="/static/logo.png" v-for="item in 5" mode="aspectFill" class="userHeaderBoxImage"></image>
+						<image src="/static/image/center/tx.png" v-for="item in 5" mode="aspectFill" class="userHeaderBoxImage"></image>
 					</view>
 				</view>
 				<view class="dumplingBox">
@@ -67,7 +67,7 @@
 						距离结束还剩下<text>21:59:13</text>
 					</view>
 					<view class="userHeaderBox">
-						<image src="/static/logo.png" v-for="item in 5" mode="aspectFill" class="userHeaderBoxImage"></image>
+						<image src="/static/image/center/tx.png" v-for="item in 5" mode="aspectFill" class="userHeaderBoxImage"></image>
 					</view>
 				</view>
 			</view>
@@ -81,7 +81,7 @@
 						<view class="userBox">
 							<view class="userName">客户名字</view>
 							<view class="userStart">
-								<image src="/static/logo.png" v-for="i in 5" class="userCommentImage" mode="aspectFill"></image>
+								<image src="/static/image/x1.png" v-for="i in 5" class="userCommentImage" mode="aspectFill"></image>
 							</view>
 						</view>
 						<view class="userTime">2020-11-17</view>
@@ -102,9 +102,9 @@
 				<view class="propContentTitle flex">
 					<view class="DPic">单份：4.00元</view>
 					<view class="handlerBox flex">
-						<image src="/static/logo.png" mode="aspectFill" class="handlerIMG"></image>
+						<image src="/static/image/center/jian.png" mode="aspectFill" class="handlerIMG"></image>
 						<view class="DPicNum">1</view>
-						<image src="/static/logo.png" mode="aspectFill" class="handlerIMG"></image>
+						<image src="/static/image/center/jia.png" mode="aspectFill" class="handlerIMG"></image>
 					</view>
 				</view>
 				<view class="payBtn">
@@ -199,7 +199,7 @@
 
 	.addressImage {
 		width: 30upx;
-		height: 30upx;
+		height: 40upx;
 		margin-right: 40upx;
 	}
 

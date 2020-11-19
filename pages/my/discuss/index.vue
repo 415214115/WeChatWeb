@@ -2,11 +2,11 @@
 	<view class="discuss">
 		<view class="shopTitle">店名店名店名店名店名店名店名店名店名店名店名店名</view>
 		<view class="starList flex">
-			<image src="/static/logo.png" mode="aspectFill" class="starImg"></image>
-			<image src="/static/logo.png" mode="aspectFill" class="starImg"></image>
-			<image src="/static/logo.png" mode="aspectFill" class="starImg"></image>
-			<image src="/static/logo.png" mode="aspectFill" class="starImg"></image>
-			<image src="/static/logo.png" mode="aspectFill" class="starImg"></image>
+			<image src="/static/image/x1.png" mode="aspectFill" class="starImg"></image>
+			<image src="/static/image/x1.png" mode="aspectFill" class="starImg"></image>
+			<image src="/static/image/x1.png" mode="aspectFill" class="starImg"></image>
+			<image src="/static/image/x1.png" mode="aspectFill" class="starImg"></image>
+			<image src="/static/image/x2.png" mode="aspectFill" class="starImg"></image>
 		</view>
 		<view class="starTip">觉得怎么样，打个分吧</view>
 		<view class="shortcut flex">
@@ -24,7 +24,7 @@
 			<view class="phtoBox">
 				<view class="addPhto phtoImgBox">
 					<!-- <image src="/static/logo.png" mode="aspectFill" class="phtoImg"></image> -->
-					<image src="/static/logo.png" mode="aspectFill" class="addPhtoImg"></image>
+					<image src="/static/image/add.png" mode="aspectFill" class="addPhtoImg"></image>
 					<view>添加图片</view>
 				</view>
 				<view class="phtoImgBox">
@@ -152,6 +152,7 @@
 		white-space: nowrap;
 		justify-content: baseline;
 		overflow-x: auto;
+		overflow-y: hidden;
 	}
 	.phtoImg,.phtoImgBox{
 		width: 130upx;
@@ -162,7 +163,7 @@
 		display: inline-block;
 	}
 	.addPhtoImg{
-		width: 40upx;
+		width: 46upx;
 		height: 40upx;
 		margin: 20upx 0 10upx 0;
 	}
