@@ -48,7 +48,7 @@
 		},{
 			"path": "pages/discover/index/index",
 			"style": {
-				"navigationBarTitleText": "发现"
+				"navigationBarTitleText": "购券"
 			}
 		},{
 			"path": "pages/discover/groupBooking/index",

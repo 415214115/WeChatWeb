@@ -2,15 +2,15 @@
 	<scroll-view class="caseDetails" :scroll-y="true" :scroll-x="false">
 		<!-- <image class="topcaseImage" :lazy-load="true" :src="pageData.cover" mode="widthFix"></image> -->
 		<view class="caseTitle">
-			<view class="caseTitleText">本插件采集的数据、发送的服务器地址、以及数据用途说明：本插件采集的数据、发送的服务器地址、以及数据用途说明：</view>
+			<view class="caseTitleText">{{pageData.title}}</view>
 			<view class="timeLook">
 				<text></text>
-				<text class="time">2020-11-15 21:38:39</text>
+				<text class="time">{{pageData.creatTime}}</text>
 				<!-- <text class="look">1322</text> -->
 			</view>
 		</view>
 		<view class="caseCont">
-			<u-parse :content="test" @preview="preview" @navigate="navigate" />
+			<u-parse :content="pageData.context" @preview="preview" @navigate="navigate" />
 		</view>
 	</scroll-view>
 </template>
@@ -29,9 +29,18 @@
 		},
 		onLoad(e) {
 			console.log(e.id)
+			this.getPageData(e.id)
 		},
 		methods: {
-
+			getPageData(id) {
+					this.$request.post('/back/type/selectInformationOne', {
+						id: id
+					}).then(res=>{
+						if (res.code == 'succes') {
+							this.pageData = res.data
+						}
+					})
+			},
 			preview(src, e) {
 				// do something
 			},

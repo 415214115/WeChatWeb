@@ -3,7 +3,7 @@
 		<view class="searchBox">
 			<view class="searchInputBox flex">
 				<image src="/static/image/searchIcon.png" class="searchIcon" mode="scaleToFill"></image>
-				<input class="uni-input" placeholder="搜索店铺" placeholder-class="placeholderClass" />
+				<input class="uni-input" placeholder="搜索店铺" placeholder-class="placeholderClass" confirm-type="search" />
 			</view>
 		</view>
 		<view class="couponContent">
@@ -37,10 +37,11 @@
 			<view class="selectTitleBox">
 				<view 
 					class="selectTitleList" 
-					:class="selectTitleListIndex == item.id?'selectActive':''" 
+					:class="queryData.id == item.id?'selectActive':''" 
 					v-for="item in selectTitleListData" 
+					@tap="selectTitles(item.id)"
 					:key="item.id">
-					{{item.title}}
+					{{item.name}}
 				</view>
 			</view>
 			<view>
@@ -66,42 +67,47 @@
 	export default{
 		data(){
 			return{
-				selectTitleListData: [
-					{
-						id: 0,
-						title: '餐饮'
-					},{
-						id: 1,
-						title: '餐饮'
-					},{
-						id: 2,
-						title: '餐饮'
-					},{
-						id: 3,
-						title: '餐饮'
-					},{
-						id: 4,
-						title: '餐饮'
-					},{
-						id: 5,
-						title: '餐饮'
-					},{
-						id: 6,
-						title: '餐饮'
-					},{
-						id: 7,
-						title: '餐饮'
-					},
-				],
-				selectTitleListIndex: 0
+				selectTitleListData: [],
+				selectTitleListIndex: 0,
+				queryData: {
+					name: '',
+					id: '',
+					type: '',
+					pageNum: 1,
+					pageSize: 20
+				}
 			}
 		},
+		onLoad() {
+			this.getShopData()
+		},
 		methods:{
+			selectTitles(id){
+				this.queryData.id = id
+				
+			},
 			goToPage(url){
 				uni.navigateTo({
 					url: url
 				})
-			}
+			},
+			getShopData(){
+				this.$request.get('/back/type/getShopType').then(res => {
+					if (res.code == 'succes') {
+						this.selectTitleListData = res.data
+						this.queryData.id = this.selectTitleListData[0].id
+						this.getShopList()
+					}
+				})
+			},
+			getShopList() {
+				this.$request.postJson('/shop/selectShopByCon',this.queryData).then(res => {
+					if (res.code == 'succes') {
+						this.tableData = res.data.list
+						this.pagecount = res.data.pages
+					}
+				})
+			},
 		}
 	}
 </script>

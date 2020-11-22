@@ -1,6 +1,6 @@
-// const baseURL = 'https://chenzhouhuang.utools.club'
+const baseURL = 'https://chenzhouhuang.utools.club'
 // const baseURL = 'https://kwkxcx.com'
-const baseURL = ''
+// const baseURL = ''
 const request = {
 	get: (url, data) => {
 		return new Promise((resolve, reject) => {

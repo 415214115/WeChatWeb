@@ -2,8 +2,8 @@
 	<scroll-view class="content" :scroll-y="true">
 		<view class="swiperBox">
 			<swiper class="swiper" :autoplay="true">
-				<swiper-item v-for="item in 4">
-					<image src="/static/logo.png" mode="aspectFill" :lazy-load="true"></image>
+				<swiper-item v-for="item in bannerList" :key="item.id">
+					<image :src="item.img" mode="aspectFill" :lazy-load="true"></image>
 				</swiper-item>
 			</swiper>
 		</view>
@@ -27,35 +27,38 @@
 			</view>
 			<view class="newsListSwiper">
 				<swiper class="newsswiper" :autoplay="true" :vertical="true" :display-multiple-items="2">
-					<swiper-item v-for="item in 4">
-						<view class="newsswiperList" @tap="toNewsDetail">河北省人民政府办公厅关于省政府部...河北省人民政府办公厅关于省政府部...</view>
+					<swiper-item v-for="item in swiperNewsListItem">
+						<view class="newsswiperList" @tap="toNewsDetail(item.id)">{{item.title}}</view>
 					</swiper-item>
 				</swiper>
 			</view>
 		</view>
 		<view class="newsListBox">
 			<view class="newsListHeader">
-				<view class="newsListHeaderText selectHeaderText">要闻</view>
-				<view class="newsListHeaderText" v-for="item in 11">要闻</view>
+				<!-- <view class="newsListHeaderText selectHeaderText">要闻</view> -->
+				<view class="newsListHeaderText" 
+					v-for="item in newsTypeList" 
+					:key="item.id" 
+					@tap="selectNews(item.id)"
+					:class="queryData.type==item.id?'selectHeaderText':''">
+					{{ item.name }}
+				</view>
+				
 			</view>
 			<view class="newsListBoxContent">
 				<!-- 样式一 -->
-				<view class="contBox flex" @tap="toNewsDetail">
+				<view class="contBox flex" @tap="toNewsDetail(item.id)" v-for="item in newsListItem" :key="item.id">
 					<view class="textBox">
-						<view class="headerTitle">
-							向着网络强国阔步前行党的十八大以来网信事业发展述评
-							向着网络强国阔步前行党的十八大以来网信事业发展述评
-							向着网络强国阔步前行党的十八大以来网信事业发展述评
-						</view>
+						<view class="headerTitle" style="height: 120upx;">{{item.title}}</view>
 						<view class="timeOrLook">
-							2020-11-15
+							{{item.creatTime}}
 							<text>1265</text>
 						</view>
 					</view>
-					<image src="/static/logo.png" class="rightImages" mode="aspectFill"></image>
+					<image  :src="item.cover" class="rightImages" mode="aspectFill"></image>
 				</view>
 				<!-- 样式二 -->
-				<view class="contBox" @tap="toNewsDetail">
+				<!-- <view class="contBox" @tap="toNewsDetail">
 					<view class="headerTitle" style="width: 100%;-webkit-line-clamp: 2; ">
 						向着网络强国阔步前行党的十八大以来网信事业发展述评
 						向着网络强国阔步前行党的十八大以来网信事业发展述评
@@ -70,9 +73,9 @@
 						2020-11-15
 						<text>1265</text>
 					</view>
-				</view>
+				</view> -->
 				<!-- 样式三 -->
-				<view class="contBox" @tap="toNewsDetail">
+				<!-- <view class="contBox" @tap="toNewsDetail">
 					<view class="headerTitle" style="width: 100%;-webkit-line-clamp: 2; ">
 						向着网络强国阔步前行党的十八大以来网信事业发展述评
 						向着网络强国阔步前行党的十八大以来网信事业发展述评
@@ -85,7 +88,7 @@
 						2020-11-15
 						<text>1265</text>
 					</view>
-				</view>
+				</view> -->
 			</view>
 		</view>
 	</scroll-view>
@@ -97,22 +100,86 @@
 			return {
 				swiper: {
 					data: [1, 2, 3, 4, 5, 6, 78]
-				}
+				},
+				bannerList: '',
+				newsTypeList: '',
+				newsId: 0,
+				queryData: {
+					name: '',
+					type: '',
+					pageNum: 1,
+					pageSize: 20
+				},
+				newsListItem: [],
+				swiperNewsListItem: '',
+				newsListItemData: ''
 			}
 		},
 		onLoad() {
-
+			this.getBanners()
+			this.getNewsType()
 		},
 		methods: {
-			toNewsDetail() {
+			selectNews(id){
+				this.queryData.type = id
+				this.queryData.pageNum = 1
+				this.newsListItem = []
+				this.$nextTick(()=>{
+					this.getNewsList()
+				})
+			},
+			toNewsDetail(id) {
 				uni.navigateTo({
-					url: '../newsDetail/index?id=12'
+					url: '../newsDetail/index?id=' + id
 				})
 			},
 			goToPage(url) {
 				uni.navigateTo({
 					url: url
 				})
+			},
+			getBanners(){
+				this.$request.get('/home/getHomeTu').then(res => {
+					if (res.code == 'succes') {
+						this.bannerList = res.data
+					}
+				})
+			},
+			getNewsType(){
+				this.$request.get('/back/type/getInformationType').then(res => {
+					if (res.code == 'succes') {
+						this.newsTypeList = res.data
+						this.queryData.type = this.newsTypeList[0].id
+						this.$nextTick(()=>{
+							this.getNewsList()
+						})
+					}
+				})
+				this.$request.post('/back/type/selectInformation', {
+					name: '',
+					type: '',
+					pageNum: 1,
+					pageSize: 4
+				}).then(res => {
+					if (res.code == 'succes') {
+						this.swiperNewsListItem = res.data.list
+					}
+				})
+			},
+			getNewsList(){
+				this.$request.post('/back/type/selectInformation', this.queryData).then(res => {
+					if (res.code == 'succes') {
+						this.newsListItemData = res.data
+						this.newsListItem = this.newsListItem.concat(this.newsListItemData.list) 
+					}
+				})
+			},
+			
+		},
+		onReachBottom() {		
+			if(this.newsListItemData.total / 20 > this.queryData.pageNum){
+				this.queryData.pageNum += 1
+				this.getNewsList()
 			}
 		}
 	}
@@ -241,6 +308,7 @@
 		font-size: 28upx;
 		color: #878A8F;
 		display: inline-block;
+		padding: 0 20upx;
 	}
 
 	.newsListHeaderText:last-child {
