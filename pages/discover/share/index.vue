@@ -4,11 +4,10 @@
 			<view class="stepBox">
 				<view class="stepNext flex">
 					<image src="/static/image/center/sfz.png" mode="aspectFill" class="stepNextImg stepImg"></image>
-					<image src="/static/image/center/shenhe.png" mode="aspectFill" class="stepNextImg"></image>
-					<!-- <image src="/static/image/center/shenhe1.png" mode="aspectFill" class="stepNextImg stepImg"></image> -->
-					<image src="/static/image/center/quan.png" mode="aspectFill" class="stepNextImg"></image>
+					<image :src="pageData.status>=1?'/static/image/center/shenhe1.png':'/static/image/center/shenhe.png'" mode="aspectFill" class="stepNextImg" :class="pageData.status==1?'stepImg':''"></image>
+					<image :src="pageData.status==2?'/static/image/center/quan1.png':'/static/image/center/quan.png'" mode="aspectFill" class="stepNextImg" :class="pageData.status==2?'stepImg':''"></image>
 					<view class="stepNextProcess">
-						<view class="stepNextProcessView"></view>
+						<view class="stepNextProcessView" :style="{width: pageData.status==1?'66.6%':pageData.status==2?'100%':'33.3%'}"></view>
 					</view>
 				</view>
 				<view class="stepNext flex">
@@ -20,7 +19,7 @@
 			<view class="uploadTip">
 				<view class="posterBoxBox">
 					<view class="exchange">换一张</view>
-					<view class="posterBox">
+					<view class="posterBox" ref="imageWrapper">
 						<image src="/static/logo.png" mode="aspectFill" class="posterBgImg"></image>
 						<view class="imagesTexts">
 							今天的努力，<br />
@@ -38,43 +37,24 @@
 						</view>
 					</view>
 				</view>
-
-				<view class="submitBtn">上传提交</view>
+				<!-- <image src="/static/logo.png" mode="aspectFill" class="codeImg111"></image> -->
+				<image :src="img?img:'/static/image/center/sz.png'" @click="uploadeCardZ" mode="aspectFill" class="uploadTipImg"></image>
+				<view class="submitBtn" v-if="pageData == '' || pageData == null || pageData.status == 3" @click="submitCard">上传提交</view>
 			</view>
 			<view class="">
 				<view class="discountDouponList">
-					<view class="listItem flex stateOne">
+					<view class="listItem flex" v-for="item in cuponList" :key="item.id" :class="item.states>0?'stateTwo':'stateOne'">
 						<view class="discountDouponMsg">
-							<view class="money"><text>88</text>元</view>
-							<view class="fullReduction">满500元可用</view>
+							<view class="money"><text>{{ item.money }}</text>元</view>
+							<view class="fullReduction">{{ item.name }}</view>
 						</view>
 						<view class="shopBox">
-							<view class="shopName">店铺名字店铺名字店铺名字店铺名字店铺名字店铺名字</view>
-							<view class="expireTime">2020-11-15 23:24:28到期</view>
+							<view class="shopName">{{ item.shopName }}</view>
+							<view class="expireTime">领取后{{ item.overTime }}小时后到期</view>
 						</view>
-						<view class="funcBtn">立即使用</view>
-					</view>
-					<view class="listItem flex stateTwo">
-						<view class="discountDouponMsg">
-							<view class="money"><text>88</text>元</view>
-							<view class="fullReduction">满500元可用</view>
-						</view>
-						<view class="shopBox">
-							<view class="shopName">店铺名字店铺名字店铺名字店铺名字店铺名字店铺名字</view>
-							<view class="expireTime">2020-11-15 23:24:28到期</view>
-						</view>
-						<view class="funcBtn">已使用</view>
-					</view>
-					<view class="listItem flex stateTwo">
-						<view class="discountDouponMsg">
-							<view class="money"><text>5</text>元</view>
-							<view class="fullReduction">满60元可用</view>
-						</view>
-						<view class="shopBox">
-							<view class="shopName">店铺名字店铺名字店铺名字店铺名字店铺名字店铺名字</view>
-							<view class="expireTime">2020-11-15 23:24:28到期</view>
-						</view>
-						<view class="funcBtn">已过期</view>
+						<view class="funcBtn" v-if="item.states == 0" @click="getCupons(item)">立即领取</view>
+						<view class="funcBtn" v-if="item.states == 1" >已领取</view>
+						<view class="funcBtn" v-if="item.states == 2" >不可领取</view>
 					</view>
 				</view>
 			</view>
@@ -83,6 +63,94 @@
 </template>
 
 <script>
+	import html2canvas from '../../../static/js/html2canvas.js'
+	export default {
+		data() {
+			return {
+				baseURL: getApp().globalData.baseUrl,
+				img: '',
+				pageData: '',
+				cuponList: ''
+			}
+		},
+		onLoad() {
+			this.getCuponList()
+			this.getPageData()
+		},
+		methods: {
+			toImage() {
+				html2canvas(document.querySelector('.posterBox')).then(canvas => {
+					let previewFile = canvas.toDataURL('image/png');
+					console.log(previewFile)
+					this.previewFile = previewFile;
+				});
+			},
+			getPageData(){
+				this.$request.get('/discounts/getShenRiInfo',{
+					type: '2'
+				}).then(res=>{
+					if (res.code == 'succes') {
+						this.pageData = res.data
+						this.img = this.pageData.img
+					}
+				})
+			},
+			getCuponList(){
+				this.$request.get('/discounts/getCouponsJZList').then(res=>{
+					if (res.code == 'succes') {
+						this.cuponList = res.data
+					}
+				})
+			},
+			submitCard(){
+				this.$request.post('/discounts/addAuditCoupons',{
+					img: this.img,
+					type: '2'
+				}).then(res=>{
+					if (res.code == 'succes') {
+						uni.showToast({
+							icon: 'success',
+							title: '提交成功',
+							duration: 2000
+						})
+						this.getPageData()
+					}
+				})
+			},
+			uploadeCardZ(){
+				if(this.pageData!= null && this.pageData!= '' && this.pageData.status == 2 || this.pageData.status == 1) return
+				uni.chooseImage({
+					count: 1,
+				    success: (chooseImageRes) => {
+				        const tempFilePaths = chooseImageRes.tempFilePaths;
+						this.uploadFile(tempFilePaths[0])
+				    }
+				});
+			},
+			uploadFile(file){
+				uni.showLoading({
+					title: '上传中...'
+				})
+				uni.uploadFile({
+				    url: this.baseURL + '/upload/one/upLoadImg',
+				    filePath: file,
+				    name: 'fileList',
+				    success: (res) => {
+						this.img = JSON.parse(res.data).data
+						uni.hideLoading()
+				    },
+					fail:()=>{
+						uni.showToast({
+							icon: 'none',
+							title: '图片上传失败',
+							duration: 2000
+						})
+						uni.hideLoading()
+					}
+				});
+			}
+		}
+	}
 </script>
 
 <style scoped>
@@ -168,9 +236,10 @@
 	}
 
 	.uploadTipImg {
-		width: 390upx;
-		height: 240upx;
+		width: 350upx;
+		height: 350upx;
 		border-radius: 15upx;
+		margin-top: 20upx;
 	}
 
 	.uploadTipTitle {

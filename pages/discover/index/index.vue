@@ -10,7 +10,7 @@
 			<view class="PTitle">白嫖券</view>
 		</view>
 		<view class="couponBoxList">
-			<view class="couponBoxListItem">
+			<view class="couponBoxListItem" @tap="goToPage('../../index/freeOfCharge/index')">
 				<image src="/static/image/center/c1.png" class="couponBoxListImg" mode="scaleToFill"></image>
 				<view class="couponBoxListText">
 					<view class="couponBoxListTextTitle">每日免费</view>
@@ -37,7 +37,7 @@
 			<view class="selectTitleBox">
 				<view 
 					class="selectTitleList" 
-					:class="queryData.id == item.id?'selectActive':''" 
+					:class="queryData.type == item.id?'selectActive':''" 
 					v-for="item in selectTitleListData" 
 					@tap="selectTitles(item.id)"
 					:key="item.id">
@@ -45,12 +45,12 @@
 				</view>
 			</view>
 			<view>
-				<view class="groupBooking flex" v-for="item in 11" :key="item" @tap="goToPage('../groupBooking/index')">
-					<image src="/static/logo.png" class="groupBookingImg" mode="scaleToFill"></image>
+				<view class="groupBooking flex" v-for="item in tableData" :key="item.id" @tap="goToPage(`../groupBooking/index?id=${item.id}`)">
+					<image :src="item.imgs" class="groupBookingImg" mode="scaleToFill"></image>
 					<view class="groupBookingContent">
-						<view class="groupBookingTitle">北欧抱枕靠垫沙发靠垫办公室腰靠垫办公室腰靠垫办公室腰靠垫腰靠...</view>
+						<view class="groupBookingTitle">{{ item.name }}</view>
 						<view class="groupBookingShop">
-							杨家坪店<text>653m</text>
+							{{ item.address }}<text>653m</text>
 						</view>
 						<view class="groupBookingFuncBox flex">
 							<view class="saleNum">已拼1000份</view>
@@ -75,7 +75,9 @@
 					type: '',
 					pageNum: 1,
 					pageSize: 20
-				}
+				},
+				tableData: [],
+				pagecount: ''
 			}
 		},
 		onLoad() {
@@ -83,8 +85,9 @@
 		},
 		methods:{
 			selectTitles(id){
-				this.queryData.id = id
-				
+				this.queryData.type = id
+				this.tableData = []
+				this.getShopList()
 			},
 			goToPage(url){
 				uni.navigateTo({
@@ -95,19 +98,22 @@
 				this.$request.get('/back/type/getShopType').then(res => {
 					if (res.code == 'succes') {
 						this.selectTitleListData = res.data
-						this.queryData.id = this.selectTitleListData[0].id
+						this.queryData.type = this.selectTitleListData[0].id
 						this.getShopList()
 					}
 				})
 			},
 			getShopList() {
-				this.$request.postJson('/shop/selectShopByCon',this.queryData).then(res => {
+				this.$request.post('/shop/selectShopByCon',this.queryData).then(res => {
 					if (res.code == 'succes') {
-						this.tableData = res.data.list
+						this.tableData = this.tableData.concat(res.data.list)
 						this.pagecount = res.data.pages
 					}
 				})
 			},
+		},
+		onReachBottom() {
+			console.log()
 		}
 	}
 </script>

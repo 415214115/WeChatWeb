@@ -1,6 +1,8 @@
 const baseURL = 'https://chenzhouhuang.utools.club'
 // const baseURL = 'https://kwkxcx.com'
 // const baseURL = ''
+// const baseURL = getApp()
+// console.log(baseURL)
 const request = {
 	get: (url, data) => {
 		return new Promise((resolve, reject) => {
@@ -9,6 +11,9 @@ const request = {
 				data,
 				method:'GET',
 				dataType:'json',
+				header: {
+				    'token': uni.getStorageSync('token') || ''
+				},
 				success: (res)=>{
 					resolve(res.data)
 				},
@@ -26,7 +31,8 @@ const request = {
 				method:'POST',
 				dataType:'json',
 				header: {
-				    'content-type': 'application/json' 
+				    'content-type': 'application/json' ,
+					'token': uni.getStorageSync('token') || ''
 				},
 				success: (res)=>{
 					resolve(res.data)

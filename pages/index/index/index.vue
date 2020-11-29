@@ -12,11 +12,11 @@
 				<image src="/static/image/page/1.png" class="ticketImg" mode="aspectFill"></image>
 				<view>免费券</view>
 			</view>
-			<view class="ticketList" @tap="goToPage()">
+			<view class="ticketList" @tap="goToPage('../../discover/share/index')">
 				<image src="/static/image/page/jiaguanzhu.png" class="ticketImg" mode="aspectFill"></image>
 				<view>积赞劵</view>
 			</view>
-			<view class="ticketList" @tap="goToPage()">
+			<view class="ticketList" @tap="goToPageGets('/pages/discover/index/index')">
 				<image src="/static/image/page/gengduo.png" class="ticketImg" mode="aspectFill"></image>
 				<view>更多券</view>
 			</view>
@@ -115,7 +115,19 @@
 				newsListItemData: ''
 			}
 		},
-		onLoad() {
+		onLoad(e) {
+			if(e.code){
+				this.$request.get('/wechat/callBack',{
+					code: e.code
+				}).then(res => {
+					if (res.code == 'succes') {
+						uni.setStorage({
+							key: 'token',
+							data: res.data
+						})
+					}
+				})
+			}
 			this.getBanners()
 			this.getNewsType()
 		},
@@ -126,6 +138,11 @@
 				this.newsListItem = []
 				this.$nextTick(()=>{
 					this.getNewsList()
+				})
+			},
+			goToPageGets(url){
+				uni.switchTab({
+					url: url
 				})
 			},
 			toNewsDetail(id) {

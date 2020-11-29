@@ -2,12 +2,12 @@
 	<view class="myBox">
 		<view class="topMsg">
 			<view class="headers flex">
-				<image src="/static/logo.png" class="headerImage" mode="aspectFill"></image>
+				<image :src="userinfo.img" class="headerImage" mode="aspectFill"></image>
 				<view class="nameTel">
-					<view class="name">哈哈哈</view>
+					<view class="name">{{ userinfo.name }}</view>
 					<view class="tel">tell:13333333333</view>
 				</view>
-				<view class="money"><text>123</text>.00</view>
+				<view class="money"><text>{{ userMoery[0] }}</text>.{{ userMoery[1] }}</view>
 			</view>
 			<view class="functions flex">
 				<view class="leftBox">
@@ -39,13 +39,31 @@
 	export default {
 		data() {
 			return {
-
+				userinfo: '',
+				userMoery: []
 			}
+		},
+		onLoad() {
+			this.getUserInfo()
 		},
 		methods: {
 			toAssignPage(url) {
 				uni.navigateTo({
 					url: url
+				})
+			},
+			getUserInfo(){
+				this.$request.get('/user/getUserInfo').then(res=>{
+					if (res.code == 'succes') {
+						this.userinfo = res.data
+						let sMoney = String(this.userinfo.moery)
+						if(sMoney.indexOf('.') > -1){
+							this.userMoery = sMoney.split('.')
+						} else {
+							this.userMoery[0] = sMoney
+							this.userMoery[1] = '00'
+						}
+					}
 				})
 			}
 		}

@@ -1,19 +1,21 @@
 <template>
 	<view class="freeOfCharge">
-		<view class="goToPage">我的优惠券</view>
+		<view class="goToPage" @click="toMyCupon">我的优惠券</view>
 		<view class="discountDouponList">
-			<view class="listItem flex stateOne">
+			<view class="listItem flex" v-for="item in cuponList" :key="item.id" :class="item.states>0?'stateTwo':'stateOne'">
 				<view class="discountDouponMsg">
-					<view class="money"><text>88</text>元</view>
-					<view class="fullReduction">满500元可用</view>
+					<view class="money"><text>{{ item.money }}</text>元</view>
+					<view class="fullReduction">{{ item.name }}</view>
 				</view>
 				<view class="shopBox">
-					<view class="shopName">店铺名字店铺名字店铺名字店铺名字店铺名字店铺名字</view>
-					<view class="expireTime">2020-11-15 23:24:28到期</view>
+					<view class="shopName">{{ item.shopName }}</view>
+					<view class="expireTime">领取后{{ item.overTime }}小时后到期</view>
 				</view>
-				<view class="funcBtn">立即使用</view>
+				<view class="funcBtn" v-if="item.states == 0" @click="getCupons(item)">立即领取</view>
+				<view class="funcBtn" v-if="item.states == 1" >已领取</view>
+				<view class="funcBtn" v-if="item.states == 2" >不可领取</view>
 			</view>
-			<view class="listItem flex stateTwo">
+			<!-- <view class="listItem flex stateTwo">
 				<view class="discountDouponMsg">
 					<view class="money"><text>88</text>元</view>
 					<view class="fullReduction">满500元可用</view>
@@ -34,7 +36,7 @@
 					<view class="expireTime">2020-11-15 23:24:28到期</view>
 				</view>
 				<view class="funcBtn">已过期</view>
-			</view>
+			</view> -->
 		</view>
 	</view>
 </template>
@@ -43,7 +45,39 @@
 	export default{
 		data(){
 			return{
-				
+				cuponList: ''
+			}
+		},
+		onLoad() {
+			this.getCuponList()
+		},
+		methods:{
+			toMyCupon(){
+				uni.navigateTo({
+					url: '../../my/discountDoupon/index'
+				})
+			},
+			getCuponList(){
+				this.$request.get('/discounts/selectMFListByUser').then(res=>{
+					if (res.code == 'succes') {
+						this.cuponList = res.data
+					}
+				})
+			},
+			getCupons(item){
+				this.$request.post('/discounts/getUserCoupons', {
+					couponsId: item.id,
+					shopId: item.shopId
+				}).then(res=>{
+					if (res.code == 'succes') {
+						uni.showToast({
+							icon: 'none',
+							title: '领取成功',
+							duration: 2000
+						})
+						this.getCuponList()
+					}
+				})
 			}
 		}
 	}

@@ -5,36 +5,36 @@
 			 :key="nav.id">{{nav.title}}</view>
 		</view>
 		<view class="discountDouponList">
-			<view class="listItem flex stateOne">
+			<view class="listItem flex stateOne" v-if="navListId == 0" v-for="item in couponList" :key="item.id">
 				<view class="discountDouponMsg">
-					<view class="money"><text>88</text>元</view>
-					<view class="fullReduction">满500元可用</view>
+					<view class="money"><text>{{ item.money }}</text>元</view>
+					<view class="fullReduction">{{ item.couponName }}</view>
 				</view>
 				<view class="shopBox">
-					<view class="shopName">店铺名字店铺名字店铺名字店铺名字店铺名字店铺名字</view>
-					<view class="expireTime">2020-11-15 23:24:28到期</view>
+					<view class="shopName">{{ item.shopName }}</view>
+					<view class="expireTime">{{ item.time }}到期</view>
 				</view>
 				<view class="funcBtn">立即使用</view>
 			</view>
-			<view class="listItem flex stateTwo">
+			<view class="listItem flex stateTwo" v-if="navListId == 2" v-for="item in couponList" :key="item.id">
 				<view class="discountDouponMsg">
-					<view class="money"><text>88</text>元</view>
-					<view class="fullReduction">满500元可用</view>
+					<view class="money"><text>{{ item.money }}</text>元</view>
+					<view class="fullReduction">{{ item.couponName }}</view>
 				</view>
 				<view class="shopBox">
-					<view class="shopName">店铺名字店铺名字店铺名字店铺名字店铺名字店铺名字</view>
-					<view class="expireTime">2020-11-15 23:24:28到期</view>
+					<view class="shopName">{{ item.shopName }}</view>
+					<view class="expireTime">{{ item.time }}到期</view>
 				</view>
 				<view class="funcBtn" @tap="toAssignPage('../discuss/index')">我要评论</view>
 			</view>
-			<view class="listItem flex stateTwo">
+			<view class="listItem flex stateTwo" v-if="navListId == 1" v-for="item in couponList" :key="item.id">
 				<view class="discountDouponMsg">
-					<view class="money"><text>5</text>元</view>
-					<view class="fullReduction">满60元可用</view>
+					<view class="money"><text>{{ item.money }}</text>元</view>
+					<view class="fullReduction">{{ item.couponName }}</view>
 				</view>
 				<view class="shopBox">
-					<view class="shopName">店铺名字店铺名字店铺名字店铺名字店铺名字店铺名字</view>
-					<view class="expireTime">2020-11-15 23:24:28到期</view>
+					<view class="shopName">{{ item.shopName }}</view>
+					<view class="expireTime">{{ item.time }}到期</view>
 				</view>
 				<view class="funcBtn">已过期</view>
 			</view>
@@ -50,22 +50,44 @@
 					id: 0,
 					title: '未使用'
 				}, {
-					id: 1,
+					id: 2,
 					title: '已使用'
 				}, {
-					id: 2,
+					id: 1,
 					title: '已过期'
 				}],
-				navListId: 0
+				navListId: 0,
+				pageData: '',
+				queryData: {
+					status: 0,//0 有效 1 无效 2 已使用
+					pageNum: 1,
+					pageSize: 20
+				},
+				couponList: []
 			}
+		},
+		onLoad() {
+			
+			this.getCouponList()
 		},
 		methods: {
 			selectNavFunc(i) {
 				this.navListId = i
+				this.queryData.status = i
+				this.couponList = []
+				this.getCouponList()
 			},
 			toAssignPage(url) {
 				uni.navigateTo({
 					url: url
+				})
+			},
+			getCouponList(){
+				this.$request.post('/discounts/getUserCouponList',this.queryData).then(res=>{
+					if (res.code == 'succes') {
+						this.pageData = res.data
+						this.couponList = this.couponList.concat(res.data.list)
+					}
 				})
 			}
 		}
@@ -88,6 +110,7 @@
 		background: #FFFFFF;
 		height: 120upx;
 		line-height: 120upx;
+		z-index: 9;
 	}
 
 	.navList {

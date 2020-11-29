@@ -3,14 +3,14 @@
 		<view class="swiperBox">
 			<swiper class="swiper" :autoplay="false" previous-margin="35px" next-margin="35px" :circular="true" :current="swiper.current"
 			 @change="swiperChange">
-				<swiper-item class="swiperItem" v-for="(item, index) in 4">
-					<image src="/static/logo.png" class="swiperImage" :class="swiper.changeIndex == index?'changeIndex':''" mode="aspectFill"
+				<swiper-item class="swiperItem" v-for="(item, index) in pageData.imgList">
+					<image :src="item" class="swiperImage" :class="swiper.changeIndex == index?'changeIndex':''" mode="aspectFill"
 					 :lazy-load="true"></image>
 				</swiper-item>
 			</swiper>
 		</view>
 		<view class="shopMsg">
-			<view class="shopTitles">美食餐厅张江店美食餐厅张江店美食餐厅张江店美食餐厅张江店</view>
+			<view class="shopTitles">{{ pageData.name }}</view>
 			<view class="score">
 				<image src="/static/image/x1.png" class="scoreImage" mode="aspectFill"></image>
 				<image src="/static/image/x1.png" class="scoreImage" mode="aspectFill"></image>
@@ -23,43 +23,54 @@
 				<view class="addressLeft flex">
 					<image src="/static/image/center/address.png" class="addressImage" mode="aspectFill"></image>
 					<view class="shopAddressBox">
-						<view class="shopAddress">天河区天河路00号正佳广场2层天河区天河路00号正佳广场2层</view>
+						<view class="shopAddress">{{ pageData.address }}</view>
 						<view class="shopAddressDistance">（距离3.2KM）</view>
 					</view>
 				</view>
-				<image src="/static/image/center/tel.png" class="telImage" mode="aspectFill"></image>
+				<image src="/static/image/center/tel.png" class="telImage" mode="aspectFill" @click="telPhone(pageData.phone)"></image>
 			</view>
 		</view>
-		<view class="couponList">
+		<view class="couponList" v-if="couponData && couponData.length > 0">
 			<view class="boxTitles">店铺团购券</view>
-			<view class="" v-for="item in 2">
+			<view class="" v-for="item in couponData">
 				<view class="couponBox flex">
 					<view class="couponMoney">
 						<view class="moneyNum">
-							￥<text class="moneyNumText">125</text>
+							￥<text class="moneyNumText">{{ item.money }}</text>
 						</view>
-						<view class="meetMoney">满99元可用</view>
+						<view class="meetMoney">{{ item.context }}</view>
 					</view>
 					<view class="couponDetail">
 						<view class="detailNum">
-							<text class="detailNumText">125元</text>（第二张半价）
+							<text class="detailNumText">{{ item.payMoney }} 元</text>
 						</view>
-						<view class="expireTime">有效期至2020.10.10</view>
+						<!-- <view class="expireTime">有效期至2020.10.10</view> -->
+						<!-- <view class="expireTime">购买后{{ item.payMoney }}小时内可用</view> -->
 					</view>
-					<view class="funcBtn">3人团</view>
+					<view class="funcBtn" @tap="shopAddTuan(item)">3人团</view>
 				</view>
-				<view class="dumplingBox">
+				<view class="dumplingBox" v-if="item.tuanShow && item.tuanShow.length > 0">
 					<view class="dumpling">
-						<text>我的团</text>已有1人参与拼团
+						<text>拼团中</text>已有{{item.tuanShow.length}}人参与拼团
 					</view>
 					<view class="dumplingTip">
-						距离结束还剩下<text>21:59:13</text>
+						距离结束还剩下
+						<!-- <text> -->
+							<countdown :time="Number(`${item.tuanShow[0].endTime - new Date().getTime()}`)" @finish="onFinish" autoStart style="display: inline-block;color: #E7632B;margin-left: 20upx;">
+								<template v-slot="{day, hour, minute, second, remain, time}">
+									<view class="case">
+										<!-- <view class="title">基本：</view> -->
+										<view>{{day}} 天 {{hour<10?'0'+hour:hour}} : {{minute<10?'0'+minute:minute}} : {{second<10?'0'+second:second}}</view>				
+									</view>
+								</template>
+							</countdown>
+						<!-- </text> -->
 					</view>
 					<view class="userHeaderBox">
 						<image src="/static/image/center/tx.png" v-for="item in 5" mode="aspectFill" class="userHeaderBoxImage"></image>
 					</view>
 				</view>
-				<view class="dumplingBox">
+				<!-- <view class="dumplingBox">
 					<view class="dumpling">
 						<text>拼团中</text>已有1人参与拼团
 					</view>
@@ -69,7 +80,7 @@
 					<view class="userHeaderBox">
 						<image src="/static/image/center/tx.png" v-for="item in 5" mode="aspectFill" class="userHeaderBoxImage"></image>
 					</view>
-				</view>
+				</view> -->
 			</view>
 		</view>
 		<view class="commentList">
@@ -97,7 +108,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="propBox" @touchmove.prevent>
+		<view class="propBox" @touchmove.prevent @click="closeProp" v-if="palProp">
 			<view class="propContent">
 				<view class="propContentTitle flex">
 					<view class="DPic">单份：4.00元</view>
@@ -116,19 +127,91 @@
 </template>
 
 <script>
+	import countdown from '../../../components/countdown-timer/countdown-timer.vue'
 	export default {
+		components:{
+			countdown
+		},
 		data() {
 			return {
+				pageData: '',
+				couponData: '',
 				swiper: {
 					current: 0,
 					changeIndex: 0
+				},
+				palProp: '',
+				time: 5000,
+				shopAddTuanData:{
+					shopId: '',
+					couponsId: '',
+					num: 1,
+					type: 0
 				}
 			}
 		},
+		onLoad(e) {
+			console.log(e.id)
+			// uni.getLocation({
+			//     type: 'wgs84',
+			//     success: function (res) {
+			//         console.log('当前位置的经度：' + res.longitude);
+			//         console.log('当前位置的纬度：' + res.latitude);
+			//     }
+			// });
+			this.shopAddTuanData.shopId = e.id
+			this.getPageData(e.id)
+			this.getCoupon(e.id)
+		},
 		methods: {
+			onFinish(){
+				// 倒计时完成.
+				console.log('倒计时完成')
+			},
 			swiperChange(e) {
 				this.swiper.changeIndex = e.target.current
 				console.log(e.target.current)
+			},
+			getPageData(id){
+				this.$request.post('/shop/showShopInfo',{
+					id: id
+				}).then(res => {
+					if (res.code == 'succes') {
+						this.pageData = res.data
+					}
+				})
+			},
+			telPhone(phone){
+				uni.makePhoneCall({
+				    phoneNumber: phone //仅为示例
+				});
+			},
+			getCoupon(id){
+				this.$request.post('/shop/selectTuanByShop',{
+					id: id
+				}).then(res=>{
+					if (res.code == 'succes') {
+						console.log(res.data)
+						this.couponData = res.data
+					}
+				})
+			},
+			shopAddTuan(item){
+				this.shopAddTuanData.couponsId = item.id
+				if(item.tuanShow.length > 0){
+					// this.shopAddTuanData.type = item.tuanShow[0].id
+					this.shopAddTuanData.type = 4
+				}
+				this.$request.get('/wechat/getToken').then(res=>{
+					if (res.code == 'succes') {
+						this.$request.post('/shop/addTuan',this.shopAddTuanData, res.data).then(res=>{
+							if (res.code == 'succes'){
+								this.getCoupon(this.shopAddTuanData.shopId)
+							}
+						})
+					}
+				})
+				
 			}
 		}
 	}

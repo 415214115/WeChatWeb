@@ -8,6 +8,9 @@
 		},
 		onHide: function() {
 			console.log('App Hide')
+		},
+		globalData:{
+			baseUrl: 'https://chenzhouhuang.utools.club'
 		}
 	}
 </script>

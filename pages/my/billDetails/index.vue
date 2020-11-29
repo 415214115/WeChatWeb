@@ -1,16 +1,21 @@
 <template>
 	<view class="billDetails">
+		<view class="typeNav flex">
+			<view class="typeNavBox selectActivetypeNavBox" @click="typeNavBoxclick(0)">收入</view>
+			<view class="typeNavBox" @click="typeNavBoxclick(1)">支出</view>
+			<view class="navIndexs" :style="{left: navIndexType*50+'%'}"></view>
+		</view>
 		<view class="dateBox flex">
 			<image src="../../../static/image/my/rl.png" mode="aspectFill" class="rlimg"></image>
-			<picker mode="date" :value="pickerValue" :start="startDate" :end="endDate" @change="pickerDateChange">
-				<view class="uni-input">{{pickerValue}}</view>
+			<picker mode="date" :value="startpickerValue" :start="startDate" :end="endDate" @change="startPickerDateChange">
+				<view class="uni-input">{{startpickerValue}}</view>
 			</picker>
 			<text>-</text>
-			<picker mode="date" :value="pickerValue" :start="startDate" :end="endDate" @change="pickerDateChange">
-				<view class="uni-input">{{pickerValue}}</view>
+			<picker mode="date" :value="endpickerValue" :start="startDate" :end="endDate" @change="endPickerDateChange">
+				<view class="uni-input">{{endpickerValue}}</view>
 			</picker>
 		</view>
-		<view class="incomeAndExpenses flex">
+		<!-- <view class="incomeAndExpenses flex">
 			<view class="moneyBox">
 				<view class="moneyTitle">收入</view>
 				<view class="moneyS">2345.67</view>
@@ -19,15 +24,15 @@
 				<view class="moneyTitle">支出</view>
 				<view class="moneyS">2345.67</view>
 			</view>
-		</view>
+		</view> -->
 		<view class="billList">
-			<view class="billListItem flex" v-for="item in 10">
+			<view class="billListItem flex" v-for="item in pageData" :key="item.id">
 				<view class="msgBox">
-					<view class="msgTitle">提现</view>
-					<view class="time">2020-11-15 22:57:55</view>
-					<view class="serialNumber">流水号：1241241251251251351</view>
+					<view class="msgTitle">{{ item.content }}</view>
+					<view class="time">{{item.CreateTime}}</view>
+					<!-- <view class="serialNumber">流水号：1241241251251251351</view> -->
 				</view>
-				<view class="picBox">￥300.00</view>
+				<view class="picBox">{{item.type == 0?'+':'-'}}￥{{item.money}}</view>
 			</view>
 		</view>
 	</view>
@@ -35,13 +40,22 @@
 
 <script>
 	export default {
-
 		data() {
 			const currentDate = this.getDate({
 				format: true
 			})
 			return {
-				pickerValue: currentDate
+				startpickerValue: currentDate,
+				endpickerValue: currentDate,
+				pageData: [],
+				navIndexType: 0,
+				queryData: {
+					pageNum: 1,
+					pageSize: 20,
+					beginTime: '',
+					endTime: '',
+					type: 0
+				}
 			}
 		},
 		computed: {
@@ -52,10 +66,30 @@
 				return this.getDate('end');
 			}
 		},
+		onLoad() {
+			this.getPayDetails()
+		},
 		methods: {
-			pickerDateChange(e) {
-				this.pickerValue = e.target.value
-				console.log(e.target.value)
+			typeNavBoxclick(i){
+				this.navIndexType = i
+				this.queryData.type = i
+				this.queryData.pageNum = 1
+				this.pageData = []
+				this.getPayDetails()
+			},
+			startPickerDateChange(e) {
+				this.startpickerValue = e.target.value
+				this.queryData.pageNum = 1
+				this.pageData = []
+				this.queryData.beginTime = this.startpickerValue
+				this.getPayDetails()
+			},
+			endPickerDateChange(e) {
+				this.endpickerValue = e.target.value
+				this.queryData.endTime = this.endpickerValue
+				this.queryData.pageNum = 1
+				this.pageData = []
+				this.getPayDetails()
 			},
 			getDate(type) {
 				const date = new Date();
@@ -71,7 +105,24 @@
 				month = month > 9 ? month : '0' + month;;
 				day = day > 9 ? day : '0' + day;
 				return `${year}-${month}-${day}`;
+			},
+			getPayDetails(){
+				this.$request.post('/user/selectBillList',this.queryData).then(res=>{
+					if (res.code == 'succes') {
+						// res.data.list.forEach((v)=>{
+							
+						// })
+						this.pageData = this.pageData.concat(res.data.list)
+						// this.pageData = res.data.list
+						console.log(this.pageData)
+					}
+				})
 			}
+		},
+		onReachBottom() {
+			// 到底了
+			this.queryData.pageNum += 1
+			this.getPayDetails()
 		}
 	}
 </script>
@@ -79,6 +130,7 @@
 <style scoped>
 	.billDetails{
 		padding: 0 30upx;
+		padding-top: 110upx;
 	}
 	.dateBox{
 		justify-content: space-between;
@@ -92,6 +144,36 @@
 	.rlimg{
 		width: 34upx;
 		height: 30upx;
+	}
+	.typeNav{
+		position: fixed;
+		justify-content: center;
+		height: 100upx;
+		background: #FFFFFF;
+		box-shadow: 0 0 10upx 1upx rgba(0,0,0,0.3);
+		z-index: 9;
+		width: 100%;
+		left: 0;
+		top: 0;
+		right: 0;
+		line-height: 100upx;
+		
+	}
+	.typeNavBox{
+		width: 50%;
+		text-align: center;
+	}
+	.navIndexs{
+		width: 50%;
+		height: 4upx;
+		background: linear-gradient(0deg, #FE4B32, #FE7C48);
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		transition: .2s all;
+	}
+	.selectActivetypeNavBox{
+		color: #FE4B32;
 	}
 	/* .dateBox::before{
 		position: absolute;

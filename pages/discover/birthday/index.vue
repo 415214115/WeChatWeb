@@ -4,11 +4,10 @@
 			<view class="stepBox">
 				<view class="stepNext flex">
 					<image src="/static/image/center/sfz.png" mode="aspectFill" class="stepNextImg stepImg"></image>
-					<image src="/static/image/center/shenhe.png" mode="aspectFill" class="stepNextImg"></image>
-					<!-- <image src="/static/image/center/shenhe1.png" mode="aspectFill" class="stepNextImg stepImg"></image> -->
-					<image src="/static/image/center/quan.png" mode="aspectFill" class="stepNextImg"></image>
+					<image :src="pageData.status>=1?'/static/image/center/shenhe1.png':'/static/image/center/shenhe.png'" mode="aspectFill" class="stepNextImg" :class="pageData.status==1?'stepImg':''"></image>
+					<image :src="pageData.status==2?'/static/image/center/quan1.png':'/static/image/center/quan.png'" mode="aspectFill" class="stepNextImg" :class="pageData.status==2?'stepImg':''"></image>
 					<view class="stepNextProcess">
-						<view class="stepNextProcessView"></view>
+						<view class="stepNextProcessView" :style="{width: pageData.status==1?'66.6%':pageData.status==2?'100%':'33.3%'}"></view>
 					</view>
 				</view>
 				<view class="stepNext flex">
@@ -18,46 +17,28 @@
 				</view>
 			</view>
 			<view class="uploadTip">
+				<input class="uni-input" type="idcard" v-model="idCard" :disabled="pageData == '' || pageData == null || pageData.status == 3?false:true" placeholder="身份证号码" />
 				<view class="uploadTipTitle">请拍摄并上传身份证</view>
-				<image src="/static/image/center/sz.png" mode="aspectFill" class="uploadTipImg"></image>
+				<image :src="uploadeCardZImg?uploadeCardZImg:'/static/image/center/sz.png'" @click="uploadeCardZ" mode="aspectFill" class="uploadTipImg"></image>
 				<view class="uploadTipText">身份证正面</view>
-				<image src="/static/image/center/sb.png" mode="aspectFill" class="uploadTipImg" style="margin-top: 50upx;"></image>
+				<image :src="uploadeCardFImg?uploadeCardFImg:'/static/image/center/sb.png'" @click="uploadeCardF" mode="aspectFill" class="uploadTipImg" style="margin-top: 50upx;"></image>
 				<view class="uploadTipText">身份证背面</view>
+				<view class="submitBtn" v-if="pageData == '' || pageData == null || pageData.status == 3" @click="submitCard">上传提交</view>
 			</view>
 			<view class="">
 				<view class="discountDouponList">
-					<view class="listItem flex stateOne">
+					<view class="listItem flex" v-for="item in cuponList" :key="item.id" :class="item.states>0?'stateTwo':'stateOne'">
 						<view class="discountDouponMsg">
-							<view class="money"><text>88</text>元</view>
-							<view class="fullReduction">满500元可用</view>
+							<view class="money"><text>{{ item.money }}</text>元</view>
+							<view class="fullReduction">{{ item.name }}</view>
 						</view>
 						<view class="shopBox">
-							<view class="shopName">店铺名字店铺名字店铺名字店铺名字店铺名字店铺名字</view>
-							<view class="expireTime">2020-11-15 23:24:28到期</view>
+							<view class="shopName">{{ item.shopName }}</view>
+							<view class="expireTime">领取后{{ item.overTime }}小时后到期</view>
 						</view>
-						<view class="funcBtn">立即使用</view>
-					</view>
-					<view class="listItem flex stateTwo">
-						<view class="discountDouponMsg">
-							<view class="money"><text>88</text>元</view>
-							<view class="fullReduction">满500元可用</view>
-						</view>
-						<view class="shopBox">
-							<view class="shopName">店铺名字店铺名字店铺名字店铺名字店铺名字店铺名字</view>
-							<view class="expireTime">2020-11-15 23:24:28到期</view>
-						</view>
-						<view class="funcBtn">已使用</view>
-					</view>
-					<view class="listItem flex stateTwo">
-						<view class="discountDouponMsg">
-							<view class="money"><text>5</text>元</view>
-							<view class="fullReduction">满60元可用</view>
-						</view>
-						<view class="shopBox">
-							<view class="shopName">店铺名字店铺名字店铺名字店铺名字店铺名字店铺名字</view>
-							<view class="expireTime">2020-11-15 23:24:28到期</view>
-						</view>
-						<view class="funcBtn">已过期</view>
+						<view class="funcBtn" v-if="item.states == 0" @click="getCupons(item)">立即领取</view>
+						<view class="funcBtn" v-if="item.states == 1" >已领取</view>
+						<view class="funcBtn" v-if="item.states == 2" >不可领取</view>
 					</view>
 				</view>
 			</view>
@@ -66,6 +47,124 @@
 </template>
 
 <script>
+	// import {baseURL} from '../../../static/js/request.js'
+	export default{
+		data(){
+			return{
+				uploadeCardZImg: '',
+				uploadeCardFImg: '',
+				idCard: '',
+				baseURL: getApp().globalData.baseUrl,
+				pageData: '',
+				cuponList: ''
+			}
+		},
+		onLoad() {
+			this.getCuponList()
+			this.getPageData()
+		},
+		methods:{
+			getCupons(item){
+				this.$request.post('/discounts/getUserCoupons', {
+					couponsId: item.id,
+					shopId: item.shopId
+				}).then(res=>{
+					if (res.code == 'succes') {
+						uni.showToast({
+							icon: 'none',
+							title: '领取成功',
+							duration: 2000
+						})
+						this.getCuponList()
+					}
+				})
+			},
+			submitCard(){
+				this.$request.post('/discounts/addAuditCoupons',{
+					img: this.uploadeCardZImg,
+					backImg: this.uploadeCardFImg,
+					idCard: this.idCard,
+					type: '1'
+				}).then(res=>{
+					if (res.code == 'succes') {
+						uni.showToast({
+							icon: 'success',
+							title: '提交成功',
+							duration: 2000
+						})
+						this.getPageData()
+					}
+				})
+			},
+			getPageData(){
+				this.$request.get('/discounts/getShenRiInfo',{
+					type: '1'
+				}).then(res=>{
+					if (res.code == 'succes') {
+						this.pageData = res.data
+						this.uploadeCardZImg = this.pageData.img
+						this.uploadeCardFImg = this.pageData.backImg
+						this.idCard = this.pageData.idCard
+					}
+				})
+			},
+			getCuponList(){
+				this.$request.get('/discounts/showBirthdayCouponsList').then(res=>{
+					if (res.code == 'succes') {
+						this.cuponList = res.data
+					}
+				})
+			},
+			uploadeCardZ(){
+				if(this.pageData!= null && this.pageData!= '' && this.pageData.status == 2 || this.pageData.status == 1) return
+				uni.chooseImage({
+					count: 1,
+				    success: (chooseImageRes) => {
+				        const tempFilePaths = chooseImageRes.tempFilePaths;
+						this.uploadFile(tempFilePaths[0], 'z')
+				    }
+				});
+			},
+			uploadeCardF(){
+				if(this.pageData!= null && this.pageData!= '' && this.pageData.status == 2 || this.pageData.status == 1) return
+				uni.chooseImage({
+					count: 1,
+				    success: (chooseImageRes) => {
+				        const tempFilePaths = chooseImageRes.tempFilePaths;
+						this.uploadFile(tempFilePaths[0], 'f')
+				        
+				    }
+				});
+			},
+			uploadFile(file, type){
+				uni.showLoading({
+					title: '上传中...'
+				})
+				uni.uploadFile({
+				    url: this.baseURL + '/upload/one/upLoadImg',
+				    filePath: file,
+				    name: 'fileList',
+				    success: (res) => {
+						console.log(JSON.parse(res.data).data)
+						if(type == 'z'){
+							this.uploadeCardZImg = JSON.parse(res.data).data
+						} else {
+							this.uploadeCardFImg = JSON.parse(res.data).data
+						}
+						uni.hideLoading()
+				    },
+					fail:()=>{
+						uni.showToast({
+							icon: 'none',
+							title: '图片上传失败',
+							duration: 2000
+						})
+						uni.hideLoading()
+					}
+				});
+			}
+		}
+	}
 </script>
 
 <style scoped>
@@ -124,7 +223,7 @@
 	}
 
 	.stepNextProcessView {
-		width: 66.6%;
+		width: 33.3%;
 		height: 100%;
 		background: #F95D19;
 	}
@@ -253,5 +352,26 @@
 	.stateTwo .fullReduction,
 	.stateTwo .expireTime {
 		color: #A7A7A7;
+	}
+	.submitBtn {
+		width: 470upx;
+		margin-top: 30upx;
+		margin-left: 140upx;
+		color: #FFFFFF;
+		text-align: center;
+		height: 80upx;
+		line-height: 80upx;
+		border-radius: 64upx;
+		background: linear-gradient(180deg, #FA463C 0%, #FA7B54 100%);
+		box-shadow: 0px 2px 20px 0px rgba(247, 123, 68, 0.5);
+	}
+	.uni-input{
+		width: 80%;
+		margin-left: 10%;
+		text-align: left;
+		border: 1px solid #FA463C;
+		border-radius: 10upx;
+		padding: 10upx 20upx;
+		height: 64upx;
 	}
 </style>
