@@ -12,11 +12,11 @@
 		<view class="shopMsg">
 			<view class="shopTitles">{{ pageData.name }}</view>
 			<view class="score">
-				<image src="/static/image/x1.png" class="scoreImage" mode="aspectFill"></image>
-				<image src="/static/image/x1.png" class="scoreImage" mode="aspectFill"></image>
+				<image src="/static/image/x1.png" v-for="i in 5" :key="i" class="scoreImage" mode="aspectFill"></image>
+				<!-- <image src="/static/image/x1.png" class="scoreImage" mode="aspectFill"></image>
 				<image src="/static/image/x1.png" class="scoreImage" mode="aspectFill"></image>
 				<image src="/static/image/x2.png" class="scoreImage" mode="aspectFill"></image>
-				<image src="/static/image/x2.png" class="scoreImage" mode="aspectFill"></image>
+				<image src="/static/image/x2.png" class="scoreImage" mode="aspectFill"></image> -->
 				<text class="scoreText">4.9分</text>
 			</view>
 			<view class="addressBox flex">
@@ -56,14 +56,15 @@
 					<view class="dumplingTip">
 						距离结束还剩下
 						<!-- <text> -->
-							<countdown :time="Number(`${item.tuanShow[0].endTime - new Date().getTime()}`)" @finish="onFinish" autoStart style="display: inline-block;color: #E7632B;margin-left: 20upx;">
-								<template v-slot="{day, hour, minute, second, remain, time}">
-									<view class="case">
-										<!-- <view class="title">基本：</view> -->
-										<view>{{day}} 天 {{hour<10?'0'+hour:hour}} : {{minute<10?'0'+minute:minute}} : {{second<10?'0'+second:second}}</view>				
-									</view>
-								</template>
-							</countdown>
+						<countdown :time="Number(`${item.tuanShow[0].endTime - new Date().getTime()}`)" @finish="onFinish" autoStart
+						 style="display: inline-block;color: #E7632B;margin-left: 20upx;">
+							<template v-slot="{day, hour, minute, second, remain, time}">
+								<view class="case">
+									<!-- <view class="title">基本：</view> -->
+									<view>{{day}} 天 {{hour<10?'0'+hour:hour}} : {{minute<10?'0'+minute:minute}} : {{second<10?'0'+second:second}}</view>
+								</view>
+							</template>
+						</countdown>
 						<!-- </text> -->
 					</view>
 					<view class="userHeaderBox">
@@ -83,27 +84,28 @@
 				</view> -->
 			</view>
 		</view>
-		<view class="commentList">
+		<view class="commentList" v-if="shopComment.length > 0">
 			<view class="boxTitles">店铺评价</view>
-			<view class="shopCommentList flex" v-for="item in 3">
-				<image src="/static/logo.png" class="headerImage" mode="aspectFill"></image>
+			<view class="shopCommentList flex" v-for="item in shopComment" :key="item.id">
+				<image :src="item.heardImg" class="headerImage" mode="aspectFill"></image>
 				<view class="shopCommentContent">
 					<view class="topText flex">
 						<view class="userBox">
-							<view class="userName">客户名字</view>
+							<view class="userName">{{item.userName}}</view>
 							<view class="userStart">
-								<image src="/static/image/x1.png" v-for="i in 5" class="userCommentImage" mode="aspectFill"></image>
+								<image :src="i > item.star?'/static/image/x2.png':'/static/image/x1.png'" v-for="i in 5" :key="i" class="userCommentImage"
+								 mode="aspectFill"></image>
 							</view>
 						</view>
-						<view class="userTime">2020-11-17</view>
+						<view class="userTime">{{item.createTime}}</view>
 					</view>
-					<view class="shopCommentConText astrictText">
-						质量很好,品质绝对是杠杠的,不愧是来自景德镇的陶瓷,名不虚传!已经是爱不释手了
-						质量很好,品质绝对是杠杠的,不愧是来自景德镇的陶瓷,名不虚传!已经是爱不释手了
+					<view class="shopCommentConText ">
+						<!-- astrictText -->
+						{{ item.content }}
 					</view>
-					<view class="lookAll">阅读全部</view>
+					<!-- <view class="lookAll">阅读全部</view> -->
 					<view class="shopCommentImages">
-						<image src="/static/logo.png" v-for="i in 5" class="shopCommentImagesList" mode="aspectFill"></image>
+						<image :src="list" v-for="(list, index) in item.img" @click="lookpreviewImage(item.img, index)" class="shopCommentImagesList" mode="aspectFill"></image>
 					</view>
 				</view>
 			</view>
@@ -129,7 +131,7 @@
 <script>
 	import countdown from '../../../components/countdown-timer/countdown-timer.vue'
 	export default {
-		components:{
+		components: {
 			countdown
 		},
 		data() {
@@ -142,12 +144,18 @@
 				},
 				palProp: '',
 				time: 5000,
-				shopAddTuanData:{
+				shopAddTuanData: {
 					shopId: '',
 					couponsId: '',
 					num: 1,
 					type: 0
-				}
+				},
+				shopCommentData: {
+					id: '',
+					pageNum: 1,
+					pageSize: 20
+				},
+				shopComment: []
 			}
 		},
 		onLoad(e) {
@@ -160,11 +168,29 @@
 			//     }
 			// });
 			this.shopAddTuanData.shopId = e.id
+			this.shopCommentData.id = e.id
 			this.getPageData(e.id)
 			this.getCoupon(e.id)
+			this.getShopComment()
 		},
 		methods: {
-			onFinish(){
+			lookpreviewImage(item, index) {
+				console.log(index)
+				uni.previewImage({
+					current: index,
+					urls: item,
+					longPressActions: {
+						itemList: ['发送给朋友', '保存图片', '收藏'],
+						success: function(data) {
+							console.log('选中了第' + (data.tapIndex + 1) + '个按钮,第' + (data.index + 1) + '张图片');
+						},
+						fail: function(err) {
+							console.log(err.errMsg);
+						}
+					}
+				});
+			},
+			onFinish() {
 				// 倒计时完成.
 				console.log('倒计时完成')
 			},
@@ -172,8 +198,8 @@
 				this.swiper.changeIndex = e.target.current
 				console.log(e.target.current)
 			},
-			getPageData(id){
-				this.$request.post('/shop/showShopInfo',{
+			getPageData(id) {
+				this.$request.post('/shop/showShopInfo', {
 					id: id
 				}).then(res => {
 					if (res.code == 'succes') {
@@ -181,38 +207,48 @@
 					}
 				})
 			},
-			telPhone(phone){
+			telPhone(phone) {
 				uni.makePhoneCall({
-				    phoneNumber: phone //仅为示例
+					phoneNumber: phone //仅为示例
 				});
 			},
-			getCoupon(id){
-				this.$request.post('/shop/selectTuanByShop',{
+			getCoupon(id) {
+				this.$request.post('/shop/selectTuanByShop', {
 					id: id
-				}).then(res=>{
+				}).then(res => {
 					if (res.code == 'succes') {
 						console.log(res.data)
 						this.couponData = res.data
 					}
 				})
 			},
-			shopAddTuan(item){
+			shopAddTuan(item) {
 				this.shopAddTuanData.couponsId = item.id
-				if(item.tuanShow.length > 0){
+				if (item.tuanShow.length > 0) {
 					// this.shopAddTuanData.type = item.tuanShow[0].id
 					this.shopAddTuanData.type = 4
 				}
-				this.$request.get('/wechat/getToken').then(res=>{
+				this.$request.get('/wechat/getToken').then(res => {
 					if (res.code == 'succes') {
-						this.$request.post('/shop/addTuan',this.shopAddTuanData, res.data).then(res=>{
-							if (res.code == 'succes'){
+						this.$request.post('/shop/addTuan', this.shopAddTuanData, res.data).then(res => {
+							if (res.code == 'succes') {
 								this.getCoupon(this.shopAddTuanData.shopId)
 							}
 						})
 					}
 				})
-				
+			},
+			getShopComment() {
+				this.$request.post('/shop/selectCommentByShop', this.shopCommentData).then(res => {
+					if (res.code == 'succes') {
+						this.shopComment = this.shopComment.concat(res.data.list)
+					}
+				})
 			}
+		},
+		onReachBottom() {
+			this.shopCommentData.pageNum += 1
+			this.getShopComment()
 		}
 	}
 </script>
@@ -460,6 +496,8 @@
 		color: #252525;
 		font-size: 30upx;
 		margin-top: 30upx;
+		margin-bottom: 30upx;
+		text-align: justify;
 	}
 
 	.astrictText {

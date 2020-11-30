@@ -128,8 +128,11 @@
 					}
 				})
 			}
-			this.getBanners()
-			this.getNewsType()
+			this.$nextTick(()=>{
+				this.getBanners()
+				this.getNewsType()
+			})
+			
 		},
 		methods: {
 			selectNews(id){

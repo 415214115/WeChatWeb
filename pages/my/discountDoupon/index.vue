@@ -14,8 +14,9 @@
 					<view class="shopName">{{ item.shopName }}</view>
 					<view class="expireTime">{{ item.time }}到期</view>
 				</view>
-				<view class="funcBtn">立即使用</view>
+				<view class="funcBtn" @click="employ(item)">立即使用</view>
 			</view>
+			
 			<view class="listItem flex stateTwo" v-if="navListId == 2" v-for="item in couponList" :key="item.id">
 				<view class="discountDouponMsg">
 					<view class="money"><text>{{ item.money }}</text>元</view>
@@ -25,8 +26,10 @@
 					<view class="shopName">{{ item.shopName }}</view>
 					<view class="expireTime">{{ item.time }}到期</view>
 				</view>
-				<view class="funcBtn" @tap="toAssignPage('../discuss/index')">我要评论</view>
+				<view class="funcBtn tocomment" v-if="item.comType == 0" @tap="toAssignPage(`../discuss/index?id=${item.id}&shopname=${item.shopName}&shopid=${item.shopId}`)">我要评论</view>
+				<view class="funcBtn" v-else>已评论</view>
 			</view>
+			
 			<view class="listItem flex stateTwo" v-if="navListId == 1" v-for="item in couponList" :key="item.id">
 				<view class="discountDouponMsg">
 					<view class="money"><text>{{ item.money }}</text>元</view>
@@ -89,7 +92,33 @@
 						this.couponList = this.couponList.concat(res.data.list)
 					}
 				})
+			},
+			employ(item){
+				uni.showModal({
+					title: '使用优惠券',
+					// showCancel: false,
+					content: item.code,
+					success:(res)=> {
+						this.$request.post('/discounts/userCoupon',{
+							id: item.id
+						}).then(res=>{
+							if (res.code == 'succes') {
+								uni.showToast({
+									icon: 'success',
+									title: '使用成功',
+									duration: 2000
+								})
+								this.couponList = []
+								this.getCouponList()
+							}
+						})
+					}
+				})
 			}
+		},
+		onReachBottom() {
+			this.queryData.pageNum += 1
+			this.getCouponList()
 		}
 	}
 </script>
@@ -217,21 +246,21 @@
 		font-size: 24upx;
 		border-radius: 64upx;
 	}
-
-	.stateOne .funcBtn {
+	.stateTwo {
+		background: #E8E8E8;
+	}
+	
+	.stateTwo .funcBtn {
+		background: #969696;
+		color: #FFFFFF;
+	}
+	.stateOne .funcBtn,.stateTwo>.tocomment {
 		background: linear-gradient(180deg, #FE4A32 0%, #FE7E48 100%);
 		box-shadow: 0px 2upx 20upx 0px rgba(251, 126, 50, 0.5);
 		color: #FFFFFF;
 	}
 
-	.stateTwo {
-		background: #E8E8E8;
-	}
-
-	.stateTwo .funcBtn {
-		background: #969696;
-		color: #FFFFFF;
-	}
+	
 
 	.stateTwo .money,
 	.stateTwo .shopName,

@@ -38,7 +38,7 @@
 					</view>
 				</view>
 				<!-- <image src="/static/logo.png" mode="aspectFill" class="codeImg111"></image> -->
-				<image :src="img?img:'/static/image/center/sz.png'" @click="uploadeCardZ" mode="aspectFill" class="uploadTipImg"></image>
+				<image :src="img?img:'/static/image/defaultImages.png'" @click="uploadeCardZ" mode="aspectFill" class="uploadTipImg"></image>
 				<view class="submitBtn" v-if="pageData == '' || pageData == null || pageData.status == 3" @click="submitCard">上传提交</view>
 			</view>
 			<view class="">

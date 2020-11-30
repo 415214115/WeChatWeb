@@ -5,12 +5,12 @@
 				<image :src="userinfo.img" class="headerImage" mode="aspectFill"></image>
 				<view class="nameTel">
 					<view class="name">{{ userinfo.name }}</view>
-					<view class="tel">tell:13333333333</view>
+					<!-- <view class="tel">tell:13333333333</view> -->
 				</view>
-				<view class="money"><text>{{ userMoery[0] }}</text>.{{ userMoery[1] }}</view>
+				<view class="money"><text>{{ userMoery[0]?userMoery[0]:'0' }}</text>.{{ userMoery[1]?userMoery[1]:'00' }}</view>
 			</view>
 			<view class="functions flex">
-				<view class="leftBox">
+				<view class="leftBox" @click="withdrawMoney">
 					<image src="/static/image/my/c.png" class="functionsImage" mode="aspectFill"></image>立即提现
 				</view>
 				<view class="rightBox" @tap="toAssignPage('../billDetails/index')">
@@ -52,12 +52,12 @@
 					url: url
 				})
 			},
-			getUserInfo(){
-				this.$request.get('/user/getUserInfo').then(res=>{
+			getUserInfo() {
+				this.$request.get('/user/getUserInfo').then(res => {
 					if (res.code == 'succes') {
 						this.userinfo = res.data
 						let sMoney = String(this.userinfo.moery)
-						if(sMoney.indexOf('.') > -1){
+						if (sMoney.indexOf('.') > -1) {
 							this.userMoery = sMoney.split('.')
 						} else {
 							this.userMoery[0] = sMoney
@@ -65,6 +65,32 @@
 						}
 					}
 				})
+			},
+			withdrawMoney() {
+				let money = '';
+				var person = prompt("请输入提现金额", "");
+				if (person != null && person != "") {
+					if(Number(person)>Number(this.userinfo.moery)){
+						uni.showToast({
+							icon: 'none',
+							title: '提现金额不能大于现有金额',
+							duration: 2000
+						})
+					} else if(Number(person)<1){
+						uni.showToast({
+							icon: 'none',
+							title: '提现金额必须大于1',
+							duration: 2000
+						})
+					} else {
+						console.log(person)
+						uni.showToast({
+							icon: 'success',
+							title: '提现申请已提交',
+							duration: 2000
+						})
+					}
+				}
 			}
 		}
 	}
