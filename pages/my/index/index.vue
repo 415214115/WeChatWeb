@@ -83,12 +83,32 @@
 							duration: 2000
 						})
 					} else {
-						console.log(person)
-						uni.showToast({
-							icon: 'success',
-							title: '提现申请已提交',
-							duration: 2000
+						this.$request.post('/user/withdrawTOUser',{
+							money: person
+						}).then(res=>{
+							if (res.code == 'succes') {
+								uni.showToast({
+									icon: 'success',
+									title: '提现申请已提交',
+									duration: 2000
+								})
+								this.getUserInfo()
+							} else if(res.code == 'error' && res.msg == '请先添加银行卡信息'){
+									uni.showModal({
+										title: '无银行卡',
+										content: res.msg,
+										success: (res) => {
+											console.log()
+											if(res.confirm){
+												uni.navigateTo({
+													url: '../bank/myBank/index'
+												})
+											}
+										}
+									})
+							}
 						})
+						
 					}
 				}
 			}

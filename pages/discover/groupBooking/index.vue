@@ -199,8 +199,11 @@
 				console.log(e.target.current)
 			},
 			getPageData(id) {
+				let locationData = JSON.parse(uni.getStorageSync('locationObj'))
 				this.$request.post('/shop/showShopInfo', {
-					id: id
+					id: id,
+					lon: locationData.lon,
+					lat: locationData.lat
 				}).then(res => {
 					if (res.code == 'succes') {
 						this.pageData = res.data

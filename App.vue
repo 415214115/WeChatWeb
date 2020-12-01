@@ -10,7 +10,7 @@
 			console.log('App Hide')
 		},
 		globalData:{
-			baseUrl: 'https://chenzhouhuang.utools.club'
+			baseUrl: 'http://47.114.59.188/'
 		}
 	}
 </script>

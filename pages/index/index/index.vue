@@ -98,6 +98,7 @@
 	export default {
 		data() {
 			return {
+				baseURL: getApp().globalData.baseUrl,
 				swiper: {
 					data: [1, 2, 3, 4, 5, 6, 78]
 				},
@@ -112,7 +113,9 @@
 				},
 				newsListItem: [],
 				swiperNewsListItem: '',
-				newsListItemData: ''
+				newsListItemData: '',
+				// 微信签名
+				
 			}
 		},
 		onLoad(e) {
@@ -129,8 +132,9 @@
 				})
 			}
 			this.$nextTick(()=>{
-				this.getBanners()
 				this.getNewsType()
+				this.getSignature()
+				this.getBanners()
 			})
 			
 		},
@@ -194,7 +198,45 @@
 					}
 				})
 			},
-			
+			getSignature(){
+				this.$request.getSignature('/wechat/getSignature',{
+					url: window.location.href
+				}).then(res=>{
+					if (res.code == 'succes'){
+						let data = res.data
+						// console.log(data)
+						uni.setStorageSync('jsapi_ticket_token', data.jsapi_ticket_token)
+						this.$wx.config({
+							// debug: true,
+							appId: data.APP_ID, // 必填，公众号的唯一标识
+							timestamp: data.timestamp, // 必填，生成签名的时间戳
+							nonceStr: data.noncestr, // 必填，生成签名的随机串
+							signature: data.signature, // 必填，签名
+							jsApiList: [
+								"getLocation", //获取地理位置
+								"chooseWXPay" //微信支付
+							]
+						});
+						setTimeout(()=>{
+							this.$wx.getLocation({
+								type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+								success: function (res) {
+									// console.log(res)
+									let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+									let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+									// var speed = res.speed; // 速度，以米/每秒计
+									// var accuracy = res.accuracy; // 位置精度
+									let locationData = {
+										lon: longitude,
+										lat: latitude
+									}
+									uni.setStorageSync('locationObj', JSON.stringify(locationData))
+								}
+							});
+						}, 300)
+					}
+				})
+			}
 		},
 		onReachBottom() {		
 			if(this.newsListItemData.total / 20 > this.queryData.pageNum){

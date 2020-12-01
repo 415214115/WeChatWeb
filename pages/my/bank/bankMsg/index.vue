@@ -10,11 +10,11 @@
 		</view>
 		<view class="bankList">
 			<view class="formName">银行户主</view>
-			<input type="text" v-model="bankMsg.userName" value="" placeholder="银行户主" placeholder-class="inputPlaceholderClass" class="inputClass" />
+			<input type="text" v-model="bankMsg.realName" value="" placeholder="银行户主" placeholder-class="inputPlaceholderClass" class="inputClass" />
 		</view>
 		<view class="bankList">
 			<view class="formName">银行卡电话</view>
-			<input type="text" v-model="bankMsg.userPhone" value="" placeholder="银行卡电话" placeholder-class="inputPlaceholderClass" class="inputClass" />
+			<input type="text" v-model="bankMsg.phone" value="" placeholder="银行卡电话" placeholder-class="inputPlaceholderClass" class="inputClass" />
 		</view>
 		<view class="confirmBtn" v-if="bankInfo" @click="addBank">确定修改</view>
 		<view class="confirmBtn" v-else @click="addBank">确定绑卡</view>
@@ -29,21 +29,21 @@
 					id: '',
 					name: '',
 					num: '',
-					userName: '',
-					userPhone: ''
+					realName: '',
+					phone: ''
 				},
 				bankInfo: ''
 			}
 		},
 		onLoad(e) {
-			console.log(JSON.parse(e.bank))
+			// console.log(JSON.parse(e.bank))
 			if(e.bank){
 				this.bankInfo = JSON.parse(e.bank)
 				this.bankMsg.id = JSON.parse(e.bank).id
 				this.bankMsg.name = JSON.parse(e.bank).name
 				this.bankMsg.num = JSON.parse(e.bank).num
-				this.bankMsg.userName = JSON.parse(e.bank).userName
-				this.bankMsg.userPhone = JSON.parse(e.bank).userPhone
+				this.bankMsg.realName = JSON.parse(e.bank).realName
+				this.bankMsg.phone = JSON.parse(e.bank).phone
 			}
 		},
 		methods:{
