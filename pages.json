@@ -51,6 +51,11 @@
 				"navigationBarTitleText": "购券"
 			}
 		},{
+			"path": "pages/discover/search/index",
+			"style": {
+				"navigationBarTitleText": "搜索"
+			}
+		},{
 			"path": "pages/discover/groupBooking/index",
 			"style": {
 				"navigationBarTitleText": "拼团领劵"

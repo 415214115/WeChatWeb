@@ -1,5 +1,5 @@
 // const baseURL = 'http://47.114.59.188/'
-const baseURL = 'http://chenzhouhuang.cn.utools.club/'
+const baseURL = 'http://chenzhouhuang.hk.utools.club'
 // const baseURL = 'https://kwkxcx.com'
 // const baseURL = ''
 // const baseURL = getApp()

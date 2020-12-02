@@ -86,10 +86,14 @@
 				})
 			},
 			getCouponList(){
+				uni.showLoading({
+					title: '加载中...'
+				})
 				this.$request.post('/discounts/getUserCouponList',this.queryData).then(res=>{
 					if (res.code == 'succes') {
 						this.pageData = res.data
 						this.couponList = this.couponList.concat(res.data.list)
+						uni.hideLoading()
 					}
 				})
 			},

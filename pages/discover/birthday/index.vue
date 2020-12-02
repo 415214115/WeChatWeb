@@ -97,6 +97,9 @@
 				})
 			},
 			getPageData(){
+				uni.showLoading({
+					title: '加载中...'
+				})
 				this.$request.get('/discounts/getShenRiInfo',{
 					type: '1'
 				}).then(res=>{
@@ -105,6 +108,7 @@
 						this.uploadeCardZImg = this.pageData.img
 						this.uploadeCardFImg = this.pageData.backImg
 						this.idCard = this.pageData.idCard
+						uni.hideLoading()
 					}
 				})
 			},

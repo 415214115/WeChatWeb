@@ -86,12 +86,16 @@
 				});
 			},
 			getPageData(){
+				uni.showLoading({
+					title: '加载中...'
+				})
 				this.$request.get('/discounts/getShenRiInfo',{
 					type: '2'
 				}).then(res=>{
 					if (res.code == 'succes') {
 						this.pageData = res.data
 						this.img = this.pageData.img
+						uni.hideLoading()
 					}
 				})
 			},

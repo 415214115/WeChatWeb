@@ -1,30 +1,27 @@
 <template>
-	<scroll-view class="groupBooking" :scroll-y="true">
+	<scroll-view class="groupBooking" :scroll-y="true" v-if="pageData">
 		<view class="swiperBox">
 			<swiper class="swiper" :autoplay="false" previous-margin="35px" next-margin="35px" :circular="true" :current="swiper.current"
 			 @change="swiperChange">
-				<swiper-item class="swiperItem" v-for="(item, index) in pageData.imgList">
+				<swiper-item class="swiperItem" v-for="(item, index) in pageData.shopInfo.imgList">
 					<image :src="item" class="swiperImage" :class="swiper.changeIndex == index?'changeIndex':''" mode="aspectFill"
 					 :lazy-load="true"></image>
 				</swiper-item>
 			</swiper>
 		</view>
 		<view class="shopMsg">
-			<view class="shopTitles">{{ pageData.name }}</view>
+			<view class="shopTitles">{{ pageData.shopInfo.name }}</view>
 			<view class="score">
-				<image src="/static/image/x1.png" v-for="i in 5" :key="i" class="scoreImage" mode="aspectFill"></image>
-				<!-- <image src="/static/image/x1.png" class="scoreImage" mode="aspectFill"></image>
-				<image src="/static/image/x1.png" class="scoreImage" mode="aspectFill"></image>
-				<image src="/static/image/x2.png" class="scoreImage" mode="aspectFill"></image>
-				<image src="/static/image/x2.png" class="scoreImage" mode="aspectFill"></image> -->
-				<text class="scoreText">4.9分</text>
+				<image :src="pageData.shopStar<i?'/static/image/x2.png':'/static/image/x1.png'" v-for="i in 5" :key="i" class="scoreImage"
+				 mode="aspectFill"></image>
+				<text class="scoreText">{{pageData.shopStar}}分</text>
 			</view>
 			<view class="addressBox flex">
 				<view class="addressLeft flex">
 					<image src="/static/image/center/address.png" class="addressImage" mode="aspectFill"></image>
 					<view class="shopAddressBox">
-						<view class="shopAddress">{{ pageData.address }}</view>
-						<view class="shopAddressDistance">（距离3.2KM）</view>
+						<view class="shopAddress">{{ pageData.shopInfo.address }}</view>
+						<view class="shopAddressDistance">（距离{{(pageData.jl / 1000).toFixed(2)}}KM）</view>
 					</view>
 				</view>
 				<image src="/static/image/center/tel.png" class="telImage" mode="aspectFill" @click="telPhone(pageData.phone)"></image>
@@ -47,28 +44,35 @@
 						<!-- <view class="expireTime">有效期至2020.10.10</view> -->
 						<!-- <view class="expireTime">购买后{{ item.payMoney }}小时内可用</view> -->
 					</view>
-					<view class="funcBtn" @tap="shopAddTuan(item)">3人团</view>
+					<!-- <view class="funcBtn" @tap="attendPay(item)">{{ item.tuanShow.length<1?'开团':'参团' }}</view> -->
+					<view class="funcBtn" @tap="attendPay(item, '0')">开团</view>
 				</view>
-				<view class="dumplingBox" v-if="item.tuanShow && item.tuanShow.length > 0">
-					<view class="dumpling">
-						<text>拼团中</text>已有{{item.tuanShow.length}}人参与拼团
-					</view>
-					<view class="dumplingTip">
-						距离结束还剩下
-						<!-- <text> -->
-						<countdown :time="Number(`${item.tuanShow[0].endTime - new Date().getTime()}`)" @finish="onFinish" autoStart
-						 style="display: inline-block;color: #E7632B;margin-left: 20upx;">
-							<template v-slot="{day, hour, minute, second, remain, time}">
-								<view class="case">
-									<!-- <view class="title">基本：</view> -->
-									<view>{{day}} 天 {{hour<10?'0'+hour:hour}} : {{minute<10?'0'+minute:minute}} : {{second<10?'0'+second:second}}</view>
-								</view>
-							</template>
-						</countdown>
-						<!-- </text> -->
-					</view>
-					<view class="userHeaderBox">
-						<image src="/static/image/center/tx.png" v-for="item in 5" mode="aspectFill" class="userHeaderBoxImage"></image>
+				<view v-if="item.tuanShow && item.tuanShow.length > 0">
+					<view class="dumplingBox"  v-for="(list, index) in item.tuanShow" :key="index">
+						<view class="dumpling">
+							<text>拼团中</text>已有{{list.imgs.length + 1}}人参与拼团
+						</view>
+						<view class="dumplingTip">
+							距离结束还剩下
+							<!-- <text> -->
+							<countdown :time="Number(`${list.endTime - new Date().getTime()}`)" @finish="onFinish" autoStart
+							 style="display: inline-block;color: #E7632B;margin-left: 20upx;">
+								<template v-slot="{day, hour, minute, second, remain, time}">
+									<view class="case">
+										<!-- <view class="title">基本：</view> -->
+										<view>{{day}} 天 {{hour<10?'0'+hour:hour}} : {{minute<10?'0'+minute:minute}} : {{second<10?'0'+second:second}}</view>
+									</view>
+								</template>
+							</countdown>
+							<!-- </text> -->
+						</view>
+						<view class="userHeaderBox">
+							<image :src="list?list.img:'/static/image/center/tx.png'" mode="aspectFill"
+							 class="userHeaderBoxImage"></image>
+							<image :src="list.imgs[t-1]?list.imgs[t-1]:'/static/image/center/tx.png'" v-for="t in 2" mode="aspectFill"
+							 class="userHeaderBoxImage"></image>
+							 <view class="attend" @tap="attendPayadds(item, list)">参团</view>
+						</view>
 					</view>
 				</view>
 				<!-- <view class="dumplingBox">
@@ -105,7 +109,8 @@
 					</view>
 					<!-- <view class="lookAll">阅读全部</view> -->
 					<view class="shopCommentImages">
-						<image :src="list" v-for="(list, index) in item.img" @click="lookpreviewImage(item.img, index)" class="shopCommentImagesList" mode="aspectFill"></image>
+						<image :src="list" v-for="(list, index) in item.img" @click="lookpreviewImage(item.img, index)" class="shopCommentImagesList"
+						 mode="aspectFill"></image>
 					</view>
 				</view>
 			</view>
@@ -113,16 +118,14 @@
 		<view class="propBox" @touchmove.prevent @click="closeProp" v-if="palProp">
 			<view class="propContent">
 				<view class="propContentTitle flex">
-					<view class="DPic">单份：4.00元</view>
+					<view class="DPic">单份：{{DPicData.toFixed(0)}}元</view>
 					<view class="handlerBox flex">
-						<image src="/static/image/center/jian.png" mode="aspectFill" class="handlerIMG"></image>
-						<view class="DPicNum">1</view>
-						<image src="/static/image/center/jia.png" mode="aspectFill" class="handlerIMG"></image>
+						<image src="/static/image/center/jian.png" mode="aspectFill" class="handlerIMG" @click.stop="decrease($event)"></image>
+						<view class="DPicNum">{{numbers}}</view>
+						<image src="/static/image/center/jia.png" mode="aspectFill" class="handlerIMG" @click.stop="increase($event)"></image>
 					</view>
 				</view>
-				<view class="payBtn">
-					立即支付<text>15.83元</text>
-				</view>
+				<view class="payBtn" @click.stop="shopAddTuan"> 立即支付 </view>
 			</view>
 		</view>
 	</scroll-view>
@@ -142,8 +145,7 @@
 					current: 0,
 					changeIndex: 0
 				},
-				palProp: '',
-				time: 5000,
+				palProp: false,
 				shopAddTuanData: {
 					shopId: '',
 					couponsId: '',
@@ -155,18 +157,12 @@
 					pageNum: 1,
 					pageSize: 20
 				},
-				shopComment: []
+				shopComment: [],
+				numbers: 1, // 购买优惠券的数量
+				DPicData: 0 // 购买优惠券单份价格
 			}
 		},
 		onLoad(e) {
-			console.log(e.id)
-			// uni.getLocation({
-			//     type: 'wgs84',
-			//     success: function (res) {
-			//         console.log('当前位置的经度：' + res.longitude);
-			//         console.log('当前位置的纬度：' + res.latitude);
-			//     }
-			// });
 			this.shopAddTuanData.shopId = e.id
 			this.shopCommentData.id = e.id
 			this.getPageData(e.id)
@@ -174,8 +170,22 @@
 			this.getShopComment()
 		},
 		methods: {
+			decrease(e) {
+				// 减少数量
+				if (this.numbers == 1) {
+					uni.showToast({
+						icon: 'none',
+						title: '最少需要购买一张'
+					})
+				} else {
+					this.numbers -= 1
+				}
+			},
+			increase(e) {
+				// 增加数量
+				this.numbers += 1
+			},
 			lookpreviewImage(item, index) {
-				console.log(index)
 				uni.previewImage({
 					current: index,
 					urls: item,
@@ -193,12 +203,43 @@
 			onFinish() {
 				// 倒计时完成.
 				console.log('倒计时完成')
+				this.getCoupon(this.shopCommentData)
+			},
+			attendPay(item, type) {
+				// 开团
+				this.DPicData = item.payMoney
+
+				this.shopAddTuanData.couponsId = item.id
+				// 参团人数大于0是参团，4是开团
+				this.shopAddTuanData.type = type
+				
+				this.$nextTick(() => {
+					this.palProp = true
+				})
+			},
+			attendPayadds(item, list) {
+				// 参团
+				this.DPicData = item.payMoney
+			
+				this.shopAddTuanData.couponsId = item.id
+				// 参团人数大于0是参团，4是开团
+				this.shopAddTuanData.type = list.id
+				
+				this.$nextTick(() => {
+					this.palProp = true
+				})
+			},
+			closeProp() {
+				this.palProp = false
+				this.numbers = 1
 			},
 			swiperChange(e) {
 				this.swiper.changeIndex = e.target.current
-				console.log(e.target.current)
 			},
 			getPageData(id) {
+				uni.showLoading({
+					title: '加载中...'
+				})
 				let locationData = JSON.parse(uni.getStorageSync('locationObj'))
 				this.$request.post('/shop/showShopInfo', {
 					id: id,
@@ -207,6 +248,7 @@
 				}).then(res => {
 					if (res.code == 'succes') {
 						this.pageData = res.data
+						uni.hideLoading()
 					}
 				})
 			},
@@ -220,24 +262,29 @@
 					id: id
 				}).then(res => {
 					if (res.code == 'succes') {
-						console.log(res.data)
 						this.couponData = res.data
 					}
 				})
 			},
-			shopAddTuan(item) {
-				this.shopAddTuanData.couponsId = item.id
-				if (item.tuanShow.length > 0) {
-					// this.shopAddTuanData.type = item.tuanShow[0].id
-					this.shopAddTuanData.type = 4
-				}
-				this.$request.get('/wechat/getToken').then(res => {
+			shopAddTuan() {
+				this.shopAddTuanData.num = this.numbers
+				this.$request.post('/shop/addTuan', this.shopAddTuanData).then(res => {
 					if (res.code == 'succes') {
-						this.$request.post('/shop/addTuan', this.shopAddTuanData, res.data).then(res => {
-							if (res.code == 'succes') {
-								this.getCoupon(this.shopAddTuanData.shopId)
+						let data = res.data
+						console.log(res.data.timeStamp)
+						this.getCoupon(this.shopCommentData.id)
+						this.palProp = false
+						this.$wx.chooseWXPay({
+							timeStamp: data.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+							nonceStr: data.nonceStr, // 支付签名随机串，不长于 32 位
+							package: data.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+							signType: data.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+							paySign: data.paySign, // 支付签名
+							success: function(re) {
+								// 支付成功后的回调函数
+								console.log(re)
 							}
-						})
+						});
 					}
 				})
 			},
@@ -558,6 +605,7 @@
 
 	.userHeaderBox {
 		margin-top: 30upx;
+		overflow: hidden;
 	}
 
 	.userHeaderBoxImage {
@@ -566,8 +614,19 @@
 		border-radius: 100%;
 		margin-right: 40upx;
 		position: relative;
+		float: left;
 	}
 
+	.attend{
+		width: 80upx;
+		height: 80upx;
+		border-radius: 100%;
+		background: linear-gradient(124deg, #FF8A00 0%, #FFB415 100%);
+		text-align: center;
+		line-height: 80upx;
+		color: #FFFFFF;
+		float: left;
+	}
 	.userHeaderBoxImage:first-child::after {
 		content: '团长';
 		position: absolute;

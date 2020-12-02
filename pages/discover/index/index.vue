@@ -3,7 +3,9 @@
 		<view class="searchBox">
 			<view class="searchInputBox flex">
 				<image src="/static/image/searchIcon.png" class="searchIcon" mode="scaleToFill"></image>
-				<input class="uni-input" placeholder="搜索店铺" placeholder-class="placeholderClass" confirm-type="search" />
+				<input class="uni-input" v-model="search" placeholder="搜索店铺" placeholder-class="placeholderClass" confirm-type="search"
+				 @confirm="confirmSubmit" />
+				 <view class="searchBtns" @click="confirmSubmit">搜索</view>
 			</view>
 		</view>
 		<view class="couponContent">
@@ -35,17 +37,13 @@
 		<view class="couponContent">
 			<view class="PTitle">拼团劵</view>
 			<view class="selectTitleBox">
-				<view 
-					class="selectTitleList" 
-					:class="queryData.type == item.id?'selectActive':''" 
-					v-for="item in selectTitleListData" 
-					@tap="selectTitles(item.id)"
-					:key="item.id">
+				<view class="selectTitleList" :class="queryData.type == item.id?'selectActive':''" v-for="(item, index) in selectTitleListData"
+				 @tap="selectTitles(item.id)" :key="index">
 					{{item.name}}
 				</view>
 			</view>
 			<view>
-				<view class="groupBooking flex" v-for="item in tableData" :key="item.id" @tap="goToPage(`../groupBooking/index?id=${item.id}`)">
+				<view class="groupBooking flex" v-for="(item, index) in tableData" :key="index" @tap="goToPage(`../groupBooking/index?id=${item.id}`)">
 					<image :src="item.imgs" class="groupBookingImg" mode="scaleToFill"></image>
 					<view class="groupBookingContent">
 						<view class="groupBookingTitle">{{ item.name }}</view>
@@ -64,9 +62,10 @@
 </template>
 
 <script>
-	export default{
-		data(){
-			return{
+	export default {
+		data() {
+			return {
+				search: '',
 				selectTitleListData: [],
 				selectTitleListIndex: 0,
 				queryData: {
@@ -80,21 +79,35 @@
 				pagecount: ''
 			}
 		},
+		onShow() {
+			this.getShopData()
+		},
 		onLoad() {
 			this.getShopData()
 		},
-		methods:{
-			selectTitles(id){
+		methods: {
+			confirmSubmit() {
+				if (this.search) {
+					uni.navigateTo({
+						url: '../search/index?keywords=' + this.search
+					})
+				}
+
+			},
+			selectTitles(id) {
 				this.queryData.type = id
 				this.tableData = []
 				this.getShopList()
 			},
-			goToPage(url){
+			goToPage(url) {
 				uni.navigateTo({
 					url: url
 				})
 			},
-			getShopData(){
+			getShopData() {
+				uni.showLoading({
+					title: '加载中...'
+				})
 				this.$request.get('/back/type/getShopType').then(res => {
 					if (res.code == 'succes') {
 						this.selectTitleListData = res.data
@@ -104,29 +117,30 @@
 				})
 			},
 			getShopList() {
-				this.$request.post('/shop/selectShopByCon',this.queryData).then(res => {
+				this.$request.post('/shop/selectShopByCon', this.queryData).then(res => {
 					if (res.code == 'succes') {
 						this.tableData = this.tableData.concat(res.data.list)
 						this.pagecount = res.data.pages
+						uni.hideLoading()
 					}
 				})
 			},
 		},
 		onReachBottom() {
-			console.log()
+			this.queryData.pageNum += 1
+			this.getShopList()
 		}
 	}
 </script>
 
 <style scoped>
-	.getCoupon{
-		
-	}
-	.searchBox{
+	.getCoupon {}
+
+	.searchBox {
 		padding: 20upx 50upx;
 	}
-	
-	.searchInputBox{
+
+	.searchInputBox {
 		width: 100%;
 		height: 60upx;
 		background: #EFEFEF;
@@ -134,29 +148,47 @@
 		padding: 0 25upx;
 		justify-content: flex-start;
 		align-items: center;
+		position: relative;
 	}
-	.searchIcon{
+	.searchBtns{
+		position: absolute;
+		right: 0;
+		top: 0;
+		height: 60upx;
+		border-radius: 0 64upx 64upx 0;
+		width: 100upx;
+		line-height: 60upx;
+		text-align: center;
+		background: linear-gradient(180deg, #FE4A32 0%, #FE7E48 100%);
+		color: #FFFFFF;
+	}
+	.searchIcon {
 		width: 28upx;
 		height: 28upx;
 		margin-right: 15upx;
 	}
-	.uni-input{
-		width: 100%;
+
+	.uni-input {
+		width: 510upx;
 		color: #737373;
 		font-size: 26upx;
 	}
-	.placeholderClass{
+
+	.placeholderClass {
 		color: #737373;
 		font-size: 26upx;
 	}
-	.couponContent{
+
+	.couponContent {
 		padding: 0 40upx;
 	}
-	.couponBoxList{
+
+	.couponBoxList {
 		overflow-x: auto;
 		white-space: nowrap;
 	}
-	.PTitle{
+
+	.PTitle {
 		position: relative;
 		color: #333333;
 		font-size: 32upx;
@@ -164,7 +196,8 @@
 		padding: 20upx 0;
 		padding-left: 48upx;
 	}
-	.PTitle::before{
+
+	.PTitle::before {
 		content: '';
 		position: absolute;
 		width: 32upx;
@@ -177,7 +210,8 @@
 		bottom: 0;
 		margin: auto;
 	}
-	.couponBoxListItem{
+
+	.couponBoxListItem {
 		width: 300upx;
 		height: 175upx;
 		position: relative;
@@ -186,16 +220,19 @@
 		overflow: hidden;
 		display: inline-block;
 	}
-	.couponBoxListItem:last-child{
+
+	.couponBoxListItem:last-child {
 		margin-right: 40upx;
 	}
-	.couponBoxListImg{
+
+	.couponBoxListImg {
 		width: 100%;
 		height: 100%;
 		position: absolute;
 		z-index: 1;
 	}
-	.couponBoxListText{
+
+	.couponBoxListText {
 		position: absolute;
 		z-index: 2;
 		top: 0;
@@ -203,17 +240,20 @@
 		right: 0;
 		padding: 50upx 36upx;
 	}
-	.couponBoxListTextTitle{
+
+	.couponBoxListTextTitle {
 		color: #FFFFFF;
 		font-weight: normal;
 		font-size: 32upx;
 	}
-	.couponBoxListTextDerail{
+
+	.couponBoxListTextDerail {
 		color: #FFFFFF;
 		font-size: 22upx;
 		padding-left: 22upx;
 	}
-	.selectTitleBox{
+
+	.selectTitleBox {
 		width: 100%;
 		background: #FE4E34;
 		padding: 6upx;
@@ -221,7 +261,8 @@
 		overflow-x: auto;
 		white-space: nowrap;
 	}
-	.selectTitleList{
+
+	.selectTitleList {
 		padding: 14upx 35upx;
 		min-width: 124upx;
 		text-align: center;
@@ -231,50 +272,59 @@
 		font-weight: normal;
 		display: inline-block;
 	}
-	.selectActive{
+
+	.selectActive {
 		color: #FF902C;
 		background: #FFFFFF;
 	}
-	.groupBooking{
+
+	.groupBooking {
 		justify-content: space-between;
 		align-items: center;
 		padding: 50upx 0;
 	}
-	.groupBookingImg{
+
+	.groupBookingImg {
 		width: 190upx;
 		height: 200upx;
 		border-radius: 10upx;
 		margin-right: 20upx;
 	}
-	.groupBookingContent{
+
+	.groupBookingContent {
 		width: 460upx;
 	}
-	.groupBookingTitle{
+
+	.groupBookingTitle {
 		color: #333333;
 		font-size: 30upx;
 		font-weight: 600;
 		display: -webkit-box;
-		   -webkit-line-clamp: 2;
-		   -webkit-box-orient: vertical;
-		   text-overflow: ellipsis; 
-		   overflow: hidden;
-		   overflow-wrap: break-word;
-		   white-space: wrap;
-		 margin-bottom: 10upx;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		overflow-wrap: break-word;
+		white-space: wrap;
+		margin-bottom: 10upx;
 	}
-	.groupBookingShop{
+
+	.groupBookingShop {
 		color: #AF8A45;
 		font-size: 28upx;
 	}
-	.groupBookingShop text{
+
+	.groupBookingShop text {
 		margin-left: 30upx;
 	}
-	.groupBookingFuncBox{
+
+	.groupBookingFuncBox {
 		justify-content: space-between;
 		align-items: center;
 		margin-top: 14upx;
 	}
-	.saleBtn{
+
+	.saleBtn {
 		background: linear-gradient(180deg, #FE4A32 0%, #FE7E48 100%);
 		box-shadow: 0px 2upx 20upx 0px rgba(251, 126, 50, 0.5);
 		border-radius: 64upx;
@@ -282,7 +332,8 @@
 		color: #FFFFFF;
 		font-size: 28upx;
 	}
-	.saleNum{
+
+	.saleNum {
 		color: #F23030;
 		font-size: 20upx;
 		background: #FEE4CE;
@@ -290,7 +341,8 @@
 		border-radius: 64upx;
 		position: relative;
 	}
-	.saleNum::before{
+
+	.saleNum::before {
 		position: absolute;
 		content: '';
 		width: 18upx;

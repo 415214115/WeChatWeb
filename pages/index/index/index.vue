@@ -170,6 +170,9 @@
 				})
 			},
 			getNewsType(){
+				uni.showLoading({
+					title: '加载中...'
+				})
 				this.$request.get('/back/type/getInformationType').then(res => {
 					if (res.code == 'succes') {
 						this.newsTypeList = res.data
@@ -187,6 +190,7 @@
 				}).then(res => {
 					if (res.code == 'succes') {
 						this.swiperNewsListItem = res.data.list
+						uni.hideLoading()
 					}
 				})
 			},

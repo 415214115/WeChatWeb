@@ -58,9 +58,13 @@
 				})
 			},
 			getCuponList(){
+				uni.showLoading({
+					title: '加载中...'
+				})
 				this.$request.get('/discounts/selectMFListByUser').then(res=>{
 					if (res.code == 'succes') {
 						this.cuponList = res.data
+						uni.hideLoading()
 					}
 				})
 			},
