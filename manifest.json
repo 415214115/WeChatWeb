@@ -79,6 +79,13 @@
         "router" : {
             "mode" : "history"
         },
-        "template" : "index.html"
+        "template" : "index.html",
+        "devServer" : {
+            "port" : ""
+        },
+        "sdkConfigs" : {
+            "maps" : {}
+        },
+        "domain" : "云go"
     }
 }

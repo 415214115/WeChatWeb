@@ -11,6 +11,7 @@
             document.write('<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' + (coverSupport ? ', viewport-fit=cover' : '') + '" />')
         </script>
         <link rel="stylesheet" href="<%= BASE_URL %>static/index.<%= VUE_APP_INDEX_CSS_HASH %>.css" />
+		<script src="https://res2.wx.qq.com/open/js/jweixin-1.6.0.js" type="text/javascript" charset="utf-8"></script>
     </head>
     <body>
         <noscript>
@@ -18,6 +19,9 @@
         </noscript>
         <div id="app"></div>
         <!-- built files will be auto injected -->
-		
+		<script type="text/javascript">
+			window.$wx = wx
+			console.log(wx)
+		</script>
     </body>
 </html>

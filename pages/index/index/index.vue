@@ -218,7 +218,9 @@
 							signature: data.signature, // 必填，签名
 							jsApiList: [
 								"getLocation", //获取地理位置
-								"chooseWXPay" //微信支付
+								"chooseWXPay", //微信支付
+								"updateTimelineShareData", // 分享到朋友圈
+								"onMenuShareTimeline"
 							]
 						});
 						setTimeout(()=>{

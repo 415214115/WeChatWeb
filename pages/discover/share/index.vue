@@ -17,8 +17,9 @@
 				</view>
 			</view>
 			<view class="uploadTip">
+				<view class="kkktip">生成海报，分享到朋友圈积攒</view>
 				<view class="posterBoxBox">
-					<view class="exchange">换一张</view>
+					<view class="exchange" @click="toImage">点击生成海报</view>
 					<view class="posterBox" ref="imageWrapper">
 						<image src="/static/logo.png" mode="aspectFill" class="posterBgImg"></image>
 						<view class="imagesTexts">
@@ -70,19 +71,69 @@
 				baseURL: getApp().globalData.baseUrl,
 				img: '',
 				pageData: '',
-				cuponList: ''
+				cuponList: '',
+				previewFile: ''
 			}
 		},
 		onLoad() {
 			this.getCuponList()
 			this.getPageData()
+			// $wx.ready(function () {      //需在用户可能点击分享按钮前就先调用
+			  // $wx.onMenuShareTimeline({ 
+			  //   title: '测试分享标题', // 分享标题
+			  //   link: 'http://192.168.0.106:8080', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+			  //   imgUrl: 'https://wangpic.oss-cn-beijing.aliyuncs.com/APP/1606663162881.jpg', // 分享图标
+			  //   success: function () {
+			  //     // 设置成功
+				 //  uni.showToast({
+				 //  	title: '分享成功'
+				 //  })
+			  //   }
+			  // })
+			// });
 		},
 		methods: {
 			toImage() {
+				uni.showLoading({
+					title: '海报生成中'
+				})
 				html2canvas(document.querySelector('.posterBox')).then(canvas => {
 					let previewFile = canvas.toDataURL('image/png');
 					console.log(previewFile)
 					this.previewFile = previewFile;
+					
+					
+					uni.hideLoading()
+					uni.showToast({
+						icon: 'none',
+						title: '海报生成成功',
+						duration: 2000
+					})
+					uni.previewImage({
+						urls: [previewFile],
+						longPressActions: {
+							itemList: ['发送给朋友', '保存图片', '收藏', '分享到朋友圈'],
+							success: function(data) {
+								if(data.tapIndex == 3){
+									$wx.onMenuShareTimeline({
+									  title: '测试分享标题', // 分享标题
+									  link: 'http://192.168.0.106:8080', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+									  imgUrl: 'https://wangpic.oss-cn-beijing.aliyuncs.com/APP/1606663162881.jpg', // 分享图标
+									  success: function () {
+									    // 设置成功
+													  uni.showToast({
+													  	title: '分享成功'
+													  })
+									  }
+									})
+								}
+								console.log('选中了第' + (data.tapIndex + 1) + '个按钮,第' + (data.index + 1) + '张图片');
+							},
+							fail: function(err) {
+								console.log(err.errMsg);
+							}
+						}
+					});
 				});
 			},
 			getPageData(){
@@ -153,7 +204,8 @@
 					}
 				});
 			}
-		}
+		},
+		
 	}
 </script>
 
@@ -225,7 +277,7 @@
 	}
 
 	.exchange {
-		width: 100upx;
+		/* width: 100upx; */
 		height: 50upx;
 		line-height: 50upx;
 		text-align: center;
@@ -237,6 +289,7 @@
 		right: 120upx;
 		position: absolute;
 		z-index: 999;
+		padding: 0 40upx;
 	}
 
 	.uploadTipImg {
@@ -459,5 +512,11 @@
 	.stateTwo .fullReduction,
 	.stateTwo .expireTime {
 		color: #A7A7A7;
+	}
+	.kkktip{
+		color: #A7A7A7;
+		text-align: center;
+		line-height: 64upx;
+		font-size: 24upx;
 	}
 </style>
