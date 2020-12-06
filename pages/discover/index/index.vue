@@ -48,10 +48,10 @@
 					<view class="groupBookingContent">
 						<view class="groupBookingTitle">{{ item.name }}</view>
 						<view class="groupBookingShop">
-							{{ item.address }}<text>653m</text>
+							{{ item.address }}<text>{{(item.jl / 1000).toFixed(2)}}KM</text>
 						</view>
 						<view class="groupBookingFuncBox flex">
-							<view class="saleNum">已拼1000份</view>
+							<view class="saleNum">已拼{{item.count}}份</view>
 							<view class="saleBtn">马上拼团</view>
 						</view>
 					</view>
@@ -73,16 +73,28 @@
 					id: '',
 					type: '',
 					pageNum: 1,
-					pageSize: 20
+					pageSize: 20,
+					lat: '',
+					lon: ''
 				},
 				tableData: [],
 				pagecount: ''
 			}
 		},
 		onShow() {
+			if(uni.getStorageSync('locationObj')){
+				this.queryData.lat = JSON.parse(uni.getStorageSync('locationObj')).lat
+				this.queryData.lon = JSON.parse(uni.getStorageSync('locationObj')).lon
+			} else {
+				this.queryData.lat = 0
+				this.queryData.lon = 0
+			}
+			// this.queryData.lat = JSON.parse(uni.getStorageSync('locationObj')).lat
+			// this.queryData.lon = JSON.parse(uni.getStorageSync('locationObj')).lon
 			this.getShopData()
 		},
 		onLoad() {
+			
 			this.getShopData()
 		},
 		methods: {

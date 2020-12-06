@@ -43,9 +43,12 @@
 				userMoery: []
 			}
 		},
-		onLoad() {
+		onShow() {
 			this.getUserInfo()
 		},
+		// onLoad() {
+		// 	this.getUserInfo()
+		// },
 		methods: {
 			toAssignPage(url) {
 				uni.navigateTo({

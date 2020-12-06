@@ -36,14 +36,10 @@
 		<view class="newsListBox">
 			<view class="newsListHeader">
 				<!-- <view class="newsListHeaderText selectHeaderText">要闻</view> -->
-				<view class="newsListHeaderText" 
-					v-for="item in newsTypeList" 
-					:key="item.id" 
-					@tap="selectNews(item.id)"
-					:class="queryData.type==item.id?'selectHeaderText':''">
+				<view class="newsListHeaderText" v-for="item in newsTypeList" :key="item.id" @tap="selectNews(item.id)" :class="queryData.type==item.id?'selectHeaderText':''">
 					{{ item.name }}
 				</view>
-				
+
 			</view>
 			<view class="newsListBoxContent">
 				<!-- 样式一 -->
@@ -52,10 +48,10 @@
 						<view class="headerTitle" style="height: 120upx;">{{item.title}}</view>
 						<view class="timeOrLook">
 							{{item.creatTime}}
-							<text>1265</text>
+							<!-- <text>1265</text> -->
 						</view>
 					</view>
-					<image  :src="item.cover" class="rightImages" mode="aspectFill"></image>
+					<image :src="item.cover" class="rightImages" mode="aspectFill"></image>
 				</view>
 				<!-- 样式二 -->
 				<!-- <view class="contBox" @tap="toNewsDetail">
@@ -115,12 +111,12 @@
 				swiperNewsListItem: '',
 				newsListItemData: '',
 				// 微信签名
-				
+
 			}
 		},
 		onLoad(e) {
-			if(e.code){
-				this.$request.get('/wechat/callBack',{
+			if (e.code) {
+				this.$request.callBack('/wechat/callBack', {
 					code: e.code
 				}).then(res => {
 					if (res.code == 'succes') {
@@ -131,23 +127,24 @@
 					}
 				})
 			}
-			this.$nextTick(()=>{
-				this.getNewsType()
-				this.getSignature()
-				this.getBanners()
-			})
-			
+			setTimeout(() => {
+				// this.$nextTick(()=>{
+				if (uni.getStorageSync('token')) {
+					this.getSignature()
+				}
+				// })
+			}, 300)
 		},
 		methods: {
-			selectNews(id){
+			selectNews(id) {
 				this.queryData.type = id
 				this.queryData.pageNum = 1
 				this.newsListItem = []
-				this.$nextTick(()=>{
+				this.$nextTick(() => {
 					this.getNewsList()
 				})
 			},
-			goToPageGets(url){
+			goToPageGets(url) {
 				uni.switchTab({
 					url: url
 				})
@@ -162,14 +159,14 @@
 					url: url
 				})
 			},
-			getBanners(){
+			getBanners() {
 				this.$request.get('/home/getHomeTu').then(res => {
 					if (res.code == 'succes') {
 						this.bannerList = res.data
 					}
 				})
 			},
-			getNewsType(){
+			getNewsType() {
 				uni.showLoading({
 					title: '加载中...'
 				})
@@ -177,7 +174,7 @@
 					if (res.code == 'succes') {
 						this.newsTypeList = res.data
 						this.queryData.type = this.newsTypeList[0].id
-						this.$nextTick(()=>{
+						this.$nextTick(() => {
 							this.getNewsList()
 						})
 					}
@@ -194,23 +191,24 @@
 					}
 				})
 			},
-			getNewsList(){
+			getNewsList() {
 				this.$request.post('/back/type/selectInformation', this.queryData).then(res => {
 					if (res.code == 'succes') {
 						this.newsListItemData = res.data
-						this.newsListItem = this.newsListItem.concat(this.newsListItemData.list) 
+						this.newsListItem = this.newsListItem.concat(this.newsListItemData.list)
 					}
 				})
 			},
-			getSignature(){
-				this.$request.getSignature('/wechat/getSignature',{
+			getSignature() {
+				this.$request.getSignature('/wechat/getSignature', {
 					url: window.location.href
-				}).then(res=>{
-					if (res.code == 'succes'){
+				}).then(res => {
+					if (res.code == 'succes') {
 						let data = res.data
 						// console.log(data)
 						uni.setStorageSync('jsapi_ticket_token', data.jsapi_ticket_token)
-						this.$wx.config({
+
+						$wx.config({
 							// debug: true,
 							appId: data.APP_ID, // 必填，公众号的唯一标识
 							timestamp: data.timestamp, // 必填，生成签名的时间戳
@@ -223,10 +221,10 @@
 								"onMenuShareTimeline"
 							]
 						});
-						setTimeout(()=>{
-							this.$wx.getLocation({
+						setTimeout(() => {
+							$wx.getLocation({
 								type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-								success: function (res) {
+								success: function(res) {
 									// console.log(res)
 									let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
 									let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
@@ -240,12 +238,14 @@
 								}
 							});
 						}, 300)
+						this.getNewsType()
+						this.getBanners()
 					}
 				})
 			}
 		},
-		onReachBottom() {		
-			if(this.newsListItemData.total / 20 > this.queryData.pageNum){
+		onReachBottom() {
+			if (this.newsListItemData.total / 20 > this.queryData.pageNum) {
 				this.queryData.pageNum += 1
 				this.getNewsList()
 			}

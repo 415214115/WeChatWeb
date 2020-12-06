@@ -1,8 +1,8 @@
 <template>
 	<view class="billDetails">
 		<view class="typeNav flex">
-			<view class="typeNavBox selectActivetypeNavBox" @click="typeNavBoxclick(0)">收入</view>
-			<view class="typeNavBox" @click="typeNavBoxclick(1)">支出</view>
+			<view class="typeNavBox" :class="navIndexType==0?'selectActivetypeNavBox':''" @click="typeNavBoxclick(0)">收入</view>
+			<view class="typeNavBox" :class="navIndexType==1?'selectActivetypeNavBox':''" @click="typeNavBoxclick(1)">支出</view>
 			<view class="navIndexs" :style="{left: navIndexType*50+'%'}"></view>
 		</view>
 		<view class="dateBox flex">

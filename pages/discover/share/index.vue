@@ -4,8 +4,10 @@
 			<view class="stepBox">
 				<view class="stepNext flex">
 					<image src="/static/image/center/sfz.png" mode="aspectFill" class="stepNextImg stepImg"></image>
-					<image :src="pageData.status>=1?'/static/image/center/shenhe1.png':'/static/image/center/shenhe.png'" mode="aspectFill" class="stepNextImg" :class="pageData.status==1?'stepImg':''"></image>
-					<image :src="pageData.status==2?'/static/image/center/quan1.png':'/static/image/center/quan.png'" mode="aspectFill" class="stepNextImg" :class="pageData.status==2?'stepImg':''"></image>
+					<image :src="pageData.status>=1?'/static/image/center/shenhe1.png':'/static/image/center/shenhe.png'" mode="aspectFill"
+					 class="stepNextImg" :class="pageData.status==1?'stepImg':''"></image>
+					<image :src="pageData.status==2?'/static/image/center/quan1.png':'/static/image/center/quan.png'" mode="aspectFill"
+					 class="stepNextImg" :class="pageData.status==2?'stepImg':''"></image>
 					<view class="stepNextProcess">
 						<view class="stepNextProcessView" :style="{width: pageData.status==1?'66.6%':pageData.status==2?'100%':'33.3%'}"></view>
 					</view>
@@ -16,11 +18,12 @@
 					<view>领劵</view>
 				</view>
 			</view>
+			<!-- <view  @click="toImage" style="width: 400upx;position: relative;margin-top: 60upx;height: 64upx;background: #2186F4;">点击生成海报</view> -->
 			<view class="uploadTip">
 				<view class="kkktip">生成海报，分享到朋友圈积攒</view>
 				<view class="posterBoxBox">
 					<view class="exchange" @click="toImage">点击生成海报</view>
-					<view class="posterBox" ref="imageWrapper">
+					<view class="posterBox" ref="imageWrapper" id="posterBox">
 						<image src="/static/logo.png" mode="aspectFill" class="posterBgImg"></image>
 						<view class="imagesTexts">
 							今天的努力，<br />
@@ -54,8 +57,8 @@
 							<view class="expireTime">领取后{{ item.overTime }}小时后到期</view>
 						</view>
 						<view class="funcBtn" v-if="item.states == 0" @click="getCupons(item)">立即领取</view>
-						<view class="funcBtn" v-if="item.states == 1" >已领取</view>
-						<view class="funcBtn" v-if="item.states == 2" >不可领取</view>
+						<view class="funcBtn" v-if="item.states == 1">已领取</view>
+						<view class="funcBtn" v-if="item.states == 2">不可领取</view>
 					</view>
 				</view>
 			</view>
@@ -78,31 +81,30 @@
 		onLoad() {
 			this.getCuponList()
 			this.getPageData()
-			// $wx.ready(function () {      //需在用户可能点击分享按钮前就先调用
-			  // $wx.onMenuShareTimeline({ 
-			  //   title: '测试分享标题', // 分享标题
-			  //   link: 'http://192.168.0.106:8080', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-			  //   imgUrl: 'https://wangpic.oss-cn-beijing.aliyuncs.com/APP/1606663162881.jpg', // 分享图标
-			  //   success: function () {
-			  //     // 设置成功
-				 //  uni.showToast({
-				 //  	title: '分享成功'
-				 //  })
-			  //   }
-			  // })
-			// });
+			$wx.ready(function() { //需在用户可能点击分享按钮前就先调用
+				$wx.onMenuShareTimeline({
+					title: '测试分享标题', // 分享标题
+					link: 'http://www.168wangwang.wang', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+					imgUrl: 'https://wangpic.oss-cn-beijing.aliyuncs.com/APP/1606663162881.jpg', // 分享图标
+					success: function() {
+						// 设置成功
+						uni.showToast({
+							title: '分享成功'
+						})
+					}
+				})
+			});
 		},
 		methods: {
 			toImage() {
 				uni.showLoading({
 					title: '海报生成中'
 				})
-				html2canvas(document.querySelector('.posterBox')).then(canvas => {
+				let htmlDom = document.getElementById('posterBox')
+				document.querySelector('html').scrollTop = 0
+				html2canvas(htmlDom).then(canvas => {
 					let previewFile = canvas.toDataURL('image/png');
-					console.log(previewFile)
 					this.previewFile = previewFile;
-					
-					
 					uni.hideLoading()
 					uni.showToast({
 						icon: 'none',
@@ -112,21 +114,8 @@
 					uni.previewImage({
 						urls: [previewFile],
 						longPressActions: {
-							itemList: ['发送给朋友', '保存图片', '收藏', '分享到朋友圈'],
+							itemList: ['发送给朋友', '保存图片', '收藏'],
 							success: function(data) {
-								if(data.tapIndex == 3){
-									$wx.onMenuShareTimeline({
-									  title: '测试分享标题', // 分享标题
-									  link: 'http://192.168.0.106:8080', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-									  imgUrl: 'https://wangpic.oss-cn-beijing.aliyuncs.com/APP/1606663162881.jpg', // 分享图标
-									  success: function () {
-									    // 设置成功
-													  uni.showToast({
-													  	title: '分享成功'
-													  })
-									  }
-									})
-								}
 								console.log('选中了第' + (data.tapIndex + 1) + '个按钮,第' + (data.index + 1) + '张图片');
 							},
 							fail: function(err) {
@@ -136,32 +125,34 @@
 					});
 				});
 			},
-			getPageData(){
+			getPageData() {
 				uni.showLoading({
 					title: '加载中...'
 				})
-				this.$request.get('/discounts/getShenRiInfo',{
+				this.$request.get('/discounts/getShenRiInfo', {
 					type: '2'
-				}).then(res=>{
-					if (res.code == 'succes') {
+				}).then(res => {
+					if (res.code == 'succes' && res.data != null) {
+						uni.hideLoading()
 						this.pageData = res.data
 						this.img = this.pageData.img
+					} else {
 						uni.hideLoading()
 					}
 				})
 			},
-			getCuponList(){
-				this.$request.get('/discounts/getCouponsJZList').then(res=>{
+			getCuponList() {
+				this.$request.get('/discounts/getCouponsJZList').then(res => {
 					if (res.code == 'succes') {
 						this.cuponList = res.data
 					}
 				})
 			},
-			submitCard(){
-				this.$request.post('/discounts/addAuditCoupons',{
+			submitCard() {
+				this.$request.post('/discounts/addAuditCoupons', {
 					img: this.img,
 					type: '2'
-				}).then(res=>{
+				}).then(res => {
 					if (res.code == 'succes') {
 						uni.showToast({
 							icon: 'success',
@@ -172,29 +163,29 @@
 					}
 				})
 			},
-			uploadeCardZ(){
-				if(this.pageData!= null && this.pageData!= '' && this.pageData.status == 2 || this.pageData.status == 1) return
+			uploadeCardZ() {
+				if (this.pageData != null && this.pageData != '' && this.pageData.status == 2 || this.pageData.status == 1) return
 				uni.chooseImage({
 					count: 1,
-				    success: (chooseImageRes) => {
-				        const tempFilePaths = chooseImageRes.tempFilePaths;
+					success: (chooseImageRes) => {
+						const tempFilePaths = chooseImageRes.tempFilePaths;
 						this.uploadFile(tempFilePaths[0])
-				    }
+					}
 				});
 			},
-			uploadFile(file){
+			uploadFile(file) {
 				uni.showLoading({
 					title: '上传中...'
 				})
 				uni.uploadFile({
-				    url: this.baseURL + '/upload/one/upLoadImg',
-				    filePath: file,
-				    name: 'fileList',
-				    success: (res) => {
+					url: this.baseURL + '/upload/one/upLoadImg',
+					filePath: file,
+					name: 'fileList',
+					success: (res) => {
 						this.img = JSON.parse(res.data).data
 						uni.hideLoading()
-				    },
-					fail:()=>{
+					},
+					fail: () => {
 						uni.showToast({
 							icon: 'none',
 							title: '图片上传失败',
@@ -205,7 +196,7 @@
 				});
 			}
 		},
-		
+
 	}
 </script>
 
@@ -513,7 +504,8 @@
 	.stateTwo .expireTime {
 		color: #A7A7A7;
 	}
-	.kkktip{
+
+	.kkktip {
 		color: #A7A7A7;
 		text-align: center;
 		line-height: 64upx;

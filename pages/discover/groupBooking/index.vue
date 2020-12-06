@@ -24,7 +24,9 @@
 						<view class="shopAddressDistance">（距离{{(pageData.jl / 1000).toFixed(2)}}KM）</view>
 					</view>
 				</view>
-				<image src="/static/image/center/tel.png" class="telImage" mode="aspectFill" @click="telPhone(pageData.phone)"></image>
+				<!-- <a :href="`tel:${pageData.phone}`"> -->
+					<image src="/static/image/center/tel.png" class="telImage" mode="aspectFill" @click="telPhone(pageData.shopInfo.phone)"></image>
+				<!-- </a> -->
 			</view>
 		</view>
 		<view class="couponList" v-if="couponData && couponData.length > 0">
@@ -42,7 +44,7 @@
 							<text class="detailNumText">{{ item.payMoney }} 元</text>
 						</view>
 						<!-- <view class="expireTime">有效期至2020.10.10</view> -->
-						<!-- <view class="expireTime">购买后{{ item.payMoney }}小时内可用</view> -->
+						<view class="expireTime">购买后{{ item.overTime }}小时内可用</view>
 					</view>
 					<!-- <view class="funcBtn" @tap="attendPay(item)">{{ item.tuanShow.length<1?'开团':'参团' }}</view> -->
 					<view class="funcBtn" @tap="attendPay(item, '0')">开团</view>
@@ -118,7 +120,7 @@
 		<view class="propBox" @touchmove.prevent @click="closeProp" v-if="palProp">
 			<view class="propContent">
 				<view class="propContentTitle flex">
-					<view class="DPic">单份：{{DPicData.toFixed(0)}}元</view>
+					<view class="DPic">单份：{{DPicData.toFixed(2)}}元</view>
 					<view class="handlerBox flex">
 						<image src="/static/image/center/jian.png" mode="aspectFill" class="handlerIMG" @click.stop="decrease($event)"></image>
 						<view class="DPicNum">{{numbers}}</view>
@@ -240,11 +242,16 @@
 				uni.showLoading({
 					title: '加载中...'
 				})
-				let locationData = JSON.parse(uni.getStorageSync('locationObj'))
+				
+				let locationData = ''
+				if(uni.getStorageSync('locationObj')){
+					locationData = JSON.parse(uni.getStorageSync('locationObj'))
+				}
+				
 				this.$request.post('/shop/showShopInfo', {
 					id: id,
-					lon: locationData.lon,
-					lat: locationData.lat
+					lon: locationData?locationData.lon:0,
+					lat: locationData?locationData.lat:0
 				}).then(res => {
 					if (res.code == 'succes') {
 						this.pageData = res.data
@@ -267,32 +274,43 @@
 				})
 			},
 			shopAddTuan() {
-				this.shopAddTuanData.num = this.numbers
-				this.$request.post('/shop/addTuan', this.shopAddTuanData).then(res => {
+				let that = this
+				that.shopAddTuanData.num = that.numbers
+				that.$request.post('/shop/addTuan', that.shopAddTuanData).then(res => {
 					if (res.code == 'succes') {
 						let data = res.data
 						console.log(data.timeStamp)
-						$wx.chooseWXPay({
-							timestamp: data.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
-							nonceStr: data.nonceStr, // 支付签名随机串，不长于 32 位
-							package: data.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
-							signType: data.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
-							paySign: data.paySign, // 支付签名
-							success: function(re) {
-								// 支付成功后的回调函数
-								if(re.err_msg == "get_brand_wcpay_request:ok" ){
-								      this.getCoupon(this.shopCommentData.id)
-								} else {
-									uni.showToast({
-										icon: 'none',
-										title: '支付失败',
-										duration: 2000
-									})
+						$wx.ready(function() { //需在用户可能点击分享按钮前就先调用
+							$wx.chooseWXPay({
+								timestamp: data.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+								nonceStr: data.nonceStr, // 支付签名随机串，不长于 32 位
+								package: data.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+								signType: data.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+								paySign: data.paySign, // 支付签名
+								success: function(re) {
+									// 支付成功后的回调函数
+									if(re.err_msg == "get_brand_wcpay_request:ok" ){
+										// uni.showToast({
+										// 	icon: 'none',
+										// 	title: '支付成功',
+										// 	duration: 2000
+										// })
+										that.numbers = 1
+									    that.getCoupon(that.shopCommentData.id)
+									} else {
+										// uni.showToast({
+										// 	icon: 'none',
+										// 	title: '支付失败',
+										// 	duration: 2000
+										// })
+										that.numbers = 1
+										that.getCoupon(that.shopCommentData.id)
+									}
+									that.palProp = false
 								}
-								this.palProp = false
-								console.log(re)
-							}
+							});
 						});
+						
 					}
 				})
 			},
