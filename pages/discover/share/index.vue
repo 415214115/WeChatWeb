@@ -5,7 +5,7 @@
 				<view class="stepNext flex">
 					<image src="/static/image/center/sfz.png" mode="aspectFill" class="stepNextImg stepImg"></image>
 					<image :src="pageData.status>=1?'/static/image/center/shenhe1.png':'/static/image/center/shenhe.png'" mode="aspectFill"
-					 class="stepNextImg" :class="pageData.status==1?'stepImg':''"></image>
+					 class="stepNextImg" :class="pageData.status>=1?'stepImg':''"></image>
 					<image :src="pageData.status==2?'/static/image/center/quan1.png':'/static/image/center/quan.png'" mode="aspectFill"
 					 class="stepNextImg" :class="pageData.status==2?'stepImg':''"></image>
 					<view class="stepNextProcess">
@@ -81,19 +81,19 @@
 		onLoad() {
 			this.getCuponList()
 			this.getPageData()
-			$wx.ready(function() { //需在用户可能点击分享按钮前就先调用
-				$wx.onMenuShareTimeline({
-					title: '测试分享标题', // 分享标题
-					link: 'http://www.168wangwang.wang', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-					imgUrl: 'https://wangpic.oss-cn-beijing.aliyuncs.com/APP/1606663162881.jpg', // 分享图标
-					success: function() {
-						// 设置成功
-						uni.showToast({
-							title: '分享成功'
-						})
-					}
-				})
-			});
+			// $wx.ready(function() { //需在用户可能点击分享按钮前就先调用
+			// 	$wx.onMenuShareTimeline({
+			// 		title: '测试分享标题', // 分享标题
+			// 		link: 'http://www.168wangwang.wang', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+			// 		imgUrl: 'https://wangpic.oss-cn-beijing.aliyuncs.com/APP/1606663162881.jpg', // 分享图标
+			// 		success: function() {
+			// 			// 设置成功
+			// 			uni.showToast({
+			// 				title: '分享成功'
+			// 			})
+			// 		}
+			// 	})
+			// });
 		},
 		methods: {
 			toImage() {
@@ -138,6 +138,21 @@
 						this.img = this.pageData.img
 					} else {
 						uni.hideLoading()
+					}
+				})
+			},
+			getCupons(item){
+				this.$request.post('/discounts/getUserCoupons', {
+					couponsId: item.id,
+					shopId: item.shopId
+				}).then(res=>{
+					if (res.code == 'succes') {
+						uni.showToast({
+							icon: 'none',
+							title: '领取成功',
+							duration: 2000
+						})
+						this.getCuponList()
 					}
 				})
 			},

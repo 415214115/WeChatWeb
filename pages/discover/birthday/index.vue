@@ -4,7 +4,7 @@
 			<view class="stepBox">
 				<view class="stepNext flex">
 					<image src="/static/image/center/sfz.png" mode="aspectFill" class="stepNextImg stepImg"></image>
-					<image :src="pageData.status>=1?'/static/image/center/shenhe1.png':'/static/image/center/shenhe.png'" mode="aspectFill" class="stepNextImg" :class="pageData.status==1?'stepImg':''"></image>
+					<image :src="pageData.status>=1?'/static/image/center/shenhe1.png':'/static/image/center/shenhe.png'" mode="aspectFill" class="stepNextImg" :class="pageData.status>=1?'stepImg':''"></image>
 					<image :src="pageData.status==2?'/static/image/center/quan1.png':'/static/image/center/quan.png'" mode="aspectFill" class="stepNextImg" :class="pageData.status==2?'stepImg':''"></image>
 					<view class="stepNextProcess">
 						<view class="stepNextProcessView" :style="{width: pageData.status==1?'66.6%':pageData.status==2?'100%':'33.3%'}"></view>
@@ -104,11 +104,11 @@
 					type: '1'
 				}).then(res=>{
 					if (res.code == 'succes') {
+						uni.hideLoading()
 						this.pageData = res.data
 						this.uploadeCardZImg = this.pageData.img
 						this.uploadeCardFImg = this.pageData.backImg
 						this.idCard = this.pageData.idCard
-						uni.hideLoading()
 					}
 				})
 			},

@@ -48,7 +48,7 @@
 							let bankNumList = this.bankInfo.num.split('')
 							let bankNh = bankNumList.splice(15, bankNumList.length-1).join('')
 							let bankNq = bankNumList.splice(0,4).join('')
-							this.bankNum = `${bankNq} ●●●● ●●●● ●●●● ${bankNh}`
+							this.bankNum = `${bankNq}***********${bankNh}`
 						}
 						
 					}
@@ -105,7 +105,7 @@
 	}
 
 	.cardNum {
-		font-size: 36upx;
+		font-size: 30upx;
 		margin-top: 56upx;
 	}
 

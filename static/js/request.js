@@ -1,4 +1,4 @@
-const baseURL = 'http://47.114.59.188/coupon/'
+const baseURL = 'http://47.114.59.188/coupon'
 // const baseURL = 'http://chenzhouhuang.cn1.utools.club'
 // const baseURL = 'https://kwkxcx.com'
 // const baseURL = ''

@@ -23,7 +23,8 @@
 			console.log('App Hide')
 		},
 		globalData:{
-			baseUrl: 'http://47.114.59.188/'
+			baseUrl: 'http://47.114.59.188/coupon'
+			// baseUrl: 'http://chenzhouhuang.cn1.utools.club'
 		}
 	}
 </script>

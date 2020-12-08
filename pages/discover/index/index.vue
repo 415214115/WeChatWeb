@@ -95,7 +95,7 @@
 		},
 		onLoad() {
 			
-			this.getShopData()
+			// this.getShopData()
 		},
 		methods: {
 			confirmSubmit() {
@@ -107,6 +107,7 @@
 
 			},
 			selectTitles(id) {
+				this.queryData.pageNum = 1
 				this.queryData.type = id
 				this.tableData = []
 				this.getShopList()

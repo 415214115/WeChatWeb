@@ -14,7 +14,7 @@
 					<view class="shopName">{{ item.shopName }}</view>
 					<view class="expireTime">{{ item.time }}到期</view>
 				</view>
-				<view class="funcBtn" @click="employ(item)">立即使用</view>
+				<view class="funcBtn" @click="employ(item)">使用</view>
 			</view>
 			
 			<view class="listItem flex stateTwo" v-if="navListId == 2" v-for="item in couponList" :key="item.id">
@@ -69,9 +69,11 @@
 				couponList: []
 			}
 		},
+		onShow() {
+			this.getCouponList()
+		},
 		onLoad() {
 			
-			this.getCouponList()
 		},
 		methods: {
 			selectNavFunc(i) {
@@ -100,22 +102,32 @@
 			employ(item){
 				uni.showModal({
 					title: '使用优惠券',
-					// showCancel: false,
-					content: item.code,
-					success:(res)=> {
-						this.$request.post('/discounts/userCoupon',{
-							id: item.id
-						}).then(res=>{
-							if (res.code == 'succes') {
-								uni.showToast({
-									icon: 'success',
-									title: '使用成功',
-									duration: 2000
-								})
-								this.couponList = []
-								this.getCouponList()
-							}
-						})
+					content: '点击确定即视为使用优惠券',
+					success: (res) => {
+						if (res.confirm) {
+							console.log('用户点击确定');
+							this.$request.post('/discounts/userCoupon',{
+								id: item.id
+							}).then(data=>{
+								if (data.code == 'succes') {
+									uni.showModal({
+										title: '使用优惠券',
+										showCancel: false,
+										content: item.code,
+										success:()=> {
+											uni.showToast({
+												icon: 'success',
+												title: '使用成功',
+												duration: 2000
+											})
+											this.couponList = []
+											this.getCouponList()
+										}
+									})
+									
+								}
+							})
+						}
 					}
 				})
 			}

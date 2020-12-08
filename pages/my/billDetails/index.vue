@@ -32,7 +32,7 @@
 					<view class="time">{{item.CreateTime}}</view>
 					<!-- <view class="serialNumber">流水号：1241241251251251351</view> -->
 				</view>
-				<view class="picBox">{{item.type == 0?'+':'-'}}￥{{item.money}}</view>
+				<view class="picBox">{{item.type == 0?'+':'-'}}￥{{(item.money).toFixed(2)}}</view>
 			</view>
 		</view>
 	</view>
