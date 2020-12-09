@@ -24,20 +24,20 @@
 				<view class="posterBoxBox">
 					<view class="exchange" @click="toImage">点击生成海报</view>
 					<view class="posterBox" ref="imageWrapper" id="posterBox">
-						<image src="/static/logo.png" mode="aspectFill" class="posterBgImg"></image>
-						<view class="imagesTexts">
+						<image  :src="haibao.img" mode="aspectFill" class="posterBgImg"></image>
+						<!-- <view class="imagesTexts">
 							今天的努力，<br />
 							为了让明天毫不费力！
-						</view>
+						</view> -->
 						<view class="bottomBox">
 							<view class="bottomBoxCodeBox flex">
 								<view class="">
-									<view class="CodeBoxTirle">扫描二维码，跟我一起学习</view>
-									<view class="CodeBoxTirleForm">来自 [go平台]公众号</view>
+									<view class="CodeBoxTirle">{{haibao.title}}</view>
+									<view class="CodeBoxTirleForm">{{haibao.titlet}}</view>
 								</view>
-								<image src="/static/logo.png" mode="aspectFill" class="codeImg"></image>
+								<image :src="haibao.erma" mode="aspectFill" class="codeImg"></image>
 							</view>
-							<view class="bottomBoxCodeBoxTip">现在加入，还有新人大礼包哦</view>
+							<view class="bottomBoxCodeBoxTip">{{haibao.content}}</view>
 						</view>
 					</view>
 				</view>
@@ -75,12 +75,14 @@
 				img: '',
 				pageData: '',
 				cuponList: '',
-				previewFile: ''
+				previewFile: '',
+				haibao:''
 			}
 		},
 		onLoad() {
 			this.getCuponList()
 			this.getPageData()
+			this.getBanben()
 			// $wx.ready(function() { //需在用户可能点击分享按钮前就先调用
 			// 	$wx.onMenuShareTimeline({
 			// 		title: '测试分享标题', // 分享标题
@@ -96,6 +98,14 @@
 			// });
 		},
 		methods: {
+			getBanben(){
+				this.$request.get('/back/type/getHaibaoLsit').then(res=>{
+					if(res.code == 'succes'){
+						this.haibao = res.data
+						console.log(res)
+					}
+				})
+			},
 			toImage() {
 				uni.showLoading({
 					title: '海报生成中'
@@ -262,7 +272,7 @@
 
 	.stepNextProcess {
 		position: absolute;
-		width: 472upx;
+		width: 440upx;
 		height: 4upx;
 		background: #CCCCCC;
 		top: 50%;

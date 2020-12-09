@@ -211,14 +211,13 @@
 	.stepImg{
 		background: #F95D19;
 		/* padding: 12upx; */
-		
 		/* border: 8upx solid rgba(249,93,25,0.5); */
 		border: 8upx solid #FCBDA2;
 	}
 	
 	.stepNextProcess {
 		position: absolute;
-		width: 472upx;
+		width: 440upx;
 		height: 4upx;
 		background: #CCCCCC;
 		top: 50%;
