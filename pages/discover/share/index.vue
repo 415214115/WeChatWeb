@@ -112,7 +112,9 @@
 				})
 				let htmlDom = document.getElementById('posterBox')
 				document.querySelector('html').scrollTop = 0
-				html2canvas(htmlDom).then(canvas => {
+				html2canvas(htmlDom,{
+					useCORS: true
+				}).then(canvas => {
 					let previewFile = canvas.toDataURL('image/png');
 					this.previewFile = previewFile;
 					uni.hideLoading()

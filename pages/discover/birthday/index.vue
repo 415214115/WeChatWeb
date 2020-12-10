@@ -17,13 +17,14 @@
 				</view>
 			</view>
 			<view class="uploadTip">
-				<input class="uni-input" type="idcard" v-model="idCard" :disabled="pageData == '' || pageData == null || pageData.status == 3?false:true" placeholder="身份证号码" />
+				<!-- <input class="uni-input" type="idcard" v-model="idCard" :disabled="pageData == '' || pageData == null || pageData.status == 3?false:true" placeholder="身份证号码" /> -->
+				<input class="uni-input" type="idcard" v-model="idCard" :disabled="!isInput" placeholder="身份证号码" />
 				<view class="uploadTipTitle">请拍摄并上传身份证</view>
 				<image :src="uploadeCardZImg?uploadeCardZImg:'/static/image/center/sz.png'" @click="uploadeCardZ" mode="aspectFill" class="uploadTipImg"></image>
 				<view class="uploadTipText">身份证正面</view>
 				<image :src="uploadeCardFImg?uploadeCardFImg:'/static/image/center/sb.png'" @click="uploadeCardF" mode="aspectFill" class="uploadTipImg" style="margin-top: 50upx;"></image>
 				<view class="uploadTipText">身份证背面</view>
-				<view class="submitBtn" v-if="pageData == '' || pageData == null || pageData.status == 3" @click="submitCard">上传提交</view>
+				<view class="submitBtn" v-if="isInput" @click="submitCard">上传提交</view>
 			</view>
 			<view class="">
 				<view class="discountDouponList">
@@ -56,7 +57,8 @@
 				idCard: '',
 				baseURL: getApp().globalData.baseUrl,
 				pageData: '',
-				cuponList: ''
+				cuponList: '',
+				isInput: false
 			}
 		},
 		onLoad() {
@@ -80,6 +82,14 @@
 				})
 			},
 			submitCard(){
+				if(!this.idCard || !this.uploadeCardFImg || !this.uploadeCardZImg){
+					uni.showToast({
+						icon: 'none',
+						title: '提交信息不全',
+						duration: 2000
+					})
+					return
+				}
 				this.$request.post('/discounts/addAuditCoupons',{
 					img: this.uploadeCardZImg,
 					backImg: this.uploadeCardFImg,
@@ -106,9 +116,15 @@
 					if (res.code == 'succes') {
 						uni.hideLoading()
 						this.pageData = res.data
-						this.uploadeCardZImg = this.pageData.img
-						this.uploadeCardFImg = this.pageData.backImg
-						this.idCard = this.pageData.idCard
+						if(this.pageData && this.pageData.idCard && this.pageData.img && this.pageData.backImg){
+							this.uploadeCardZImg = this.pageData.img
+							this.uploadeCardFImg = this.pageData.backImg
+							this.idCard = this.pageData.idCard
+							this.isInput = false
+						} else {
+							this.isInput = true
+						}
+						
 					}
 				})
 			},
@@ -120,7 +136,7 @@
 				})
 			},
 			uploadeCardZ(){
-				if(this.pageData!= null && this.pageData!= '' && this.pageData.status == 2 || this.pageData.status == 1) return
+				if(this.uploadeCardZImg) return
 				uni.chooseImage({
 					count: 1,
 				    success: (chooseImageRes) => {
@@ -130,7 +146,8 @@
 				});
 			},
 			uploadeCardF(){
-				if(this.pageData!= null && this.pageData!= '' && this.pageData.status == 2 || this.pageData.status == 1) return
+				// if(this.pageData!= null && this.pageData!= '' && this.pageData.status == 2 || this.pageData.status == 1) return
+				if(this.uploadeCardFImg) return
 				uni.chooseImage({
 					count: 1,
 				    success: (chooseImageRes) => {

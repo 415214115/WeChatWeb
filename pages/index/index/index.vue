@@ -124,16 +124,25 @@
 							key: 'token',
 							data: res.data
 						})
+						setTimeout(() => {
+							// this.$nextTick(()=>{
+							if (uni.getStorageSync('token')) {
+								this.getSignature()
+							}
+							// })
+						}, 300)
 					}
 				})
+			} else {
+				this.getSignature()
 			}
-			setTimeout(() => {
-				// this.$nextTick(()=>{
-				if (uni.getStorageSync('token')) {
-					this.getSignature()
-				}
-				// })
-			}, 300)
+			// setTimeout(() => {
+			// 	// this.$nextTick(()=>{
+			// 	if (uni.getStorageSync('token')) {
+			// 		this.getSignature()
+			// 	}
+			// 	// })
+			// }, 300)
 		},
 		methods: {
 			selectNews(id) {

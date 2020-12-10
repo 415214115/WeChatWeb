@@ -91,6 +91,7 @@
 			}
 			// this.queryData.lat = JSON.parse(uni.getStorageSync('locationObj')).lat
 			// this.queryData.lon = JSON.parse(uni.getStorageSync('locationObj')).lon
+			this.tableData = []
 			this.getShopData()
 		},
 		onLoad() {
